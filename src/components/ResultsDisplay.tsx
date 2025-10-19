@@ -96,10 +96,16 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
   return null;
 };
 
-// Custom Label component with an arrow for the deadline ReferenceLine
-const DeadlineLabelWithArrow = (props: any) => {
+interface DeadlineLabelProps {
+  viewBox?: { x?: number; y?: number };
+  value: string;
+  dy: number;
+  fill: string;
+}
+
+const DeadlineLabelWithArrow = (props: DeadlineLabelProps) => {
   const { viewBox, value, dy, fill } = props;
-  if (!viewBox) return null;
+  if (!viewBox || !viewBox.x || !viewBox.y) return null;
   const { x, y } = viewBox;
 
   const textY = y + dy;
