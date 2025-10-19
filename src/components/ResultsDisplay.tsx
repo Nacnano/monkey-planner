@@ -29,6 +29,17 @@ const formatNumber = (num: number, digits = 0) =>
     maximumFractionDigits: digits,
   }).format(num);
 
+const formatDate = (dateString: string) => {
+  if (!dateString || !dateString.includes("-")) return "";
+  const [year, month, day] = dateString.split("-").map(Number);
+  const date = new Date(year, month - 1, day);
+  return date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+};
+
 const COURSE_COLORS = [
   "#3b82f6",
   "#10b981",
@@ -79,6 +90,7 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
 export function ResultsDisplay({ results }: ResultsDisplayProps) {
   const {
     inputs,
+    totalSheets,
     examDeadlines,
     requiredSlotsPerWeek,
     totalFee,
@@ -198,7 +210,7 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
             <BarChart
               layout="vertical"
               data={chartData}
-              margin={{ top: 5, right: 30, left: 20, bottom: 20 }}
+              margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
             >
               <CartesianGrid strokeDasharray="3 3" horizontal={false} />
               <XAxis
@@ -226,23 +238,9 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
                 cursor={{ fill: "rgba(241, 245, 249, 0.5)" }}
               />
               <Legend
-                verticalAlign="top"
-                wrapperStyle={{ paddingBottom: "1rem" }}
+                verticalAlign="bottom"
+                wrapperStyle={{ paddingTop: "1rem" }}
               />
-
-              {examDeadlines.map((deadline, index) => (
-                <ReferenceLine
-                  key={deadline.examName}
-                  x={deadline.daysRemaining}
-                  label={{
-                    value: deadline.examName,
-                    position: "insideTopRight",
-                    fill: DEADLINE_COLORS[index % DEADLINE_COLORS.length],
-                  }}
-                  stroke={DEADLINE_COLORS[index % DEADLINE_COLORS.length]}
-                  strokeDasharray="4 4"
-                />
-              ))}
 
               {courses.map((course, index) => (
                 <Bar
@@ -251,6 +249,22 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
                   stackId="a"
                   name={course.name}
                   fill={COURSE_COLORS[index % COURSE_COLORS.length]}
+                />
+              ))}
+
+              {examDeadlines.map((deadline, index) => (
+                <ReferenceLine
+                  key={deadline.examName}
+                  x={deadline.daysRemaining}
+                  label={{
+                    value: `${deadline.examName} (${formatDate(
+                      deadline.date
+                    )})`,
+                    position: "top",
+                    fill: DEADLINE_COLORS[index % DEADLINE_COLORS.length],
+                  }}
+                  stroke={DEADLINE_COLORS[index % DEADLINE_COLORS.length]}
+                  strokeDasharray="4 4"
                 />
               ))}
             </BarChart>
