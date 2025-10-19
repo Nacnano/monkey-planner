@@ -11,8 +11,6 @@ export interface Exam {
 }
 
 export interface FormData {
-  studentNickname: string;
-  goal: string;
   preferredSlots: number;
   courses: Course[];
   exams: Exam[];

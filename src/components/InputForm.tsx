@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import type { Course, Exam, FormData } from "../types";
 import {
   PlusCircle,
-  User,
-  Target,
   BarChart,
   DollarSign,
   Send,
@@ -23,24 +21,29 @@ const createDueDate = (monthsToAdd: number) => {
 };
 
 const initialExams: Exam[] = [
-  { id: crypto.randomUUID(), name: "สอบ MWITS", date: createDueDate(12) },
+  { id: crypto.randomUUID(), name: "Midterm Exam", date: createDueDate(5) },
+  { id: crypto.randomUUID(), name: "Final Exam", date: createDueDate(9) },
+  {
+    id: crypto.randomUUID(),
+    name: "University Entrance Exam",
+    date: createDueDate(12),
+  },
+];
+
+const initialCourses: Course[] = [
+  { id: crypto.randomUUID(), name: "ปรับพื้นฐาน ม.ปลาย", sheetCount: 20 },
+  { id: crypto.randomUUID(), name: "เนื้อหาฟิสิกส์ ม.5", sheetCount: 45 },
+  { id: crypto.randomUUID(), name: "ตะลุยโจทย์ PAT3", sheetCount: 60 },
 ];
 
 export function InputForm({ onCalculate }: InputFormProps) {
-  const [studentNickname, setStudentNickname] = useState("Nac");
-  const [goal, setGoal] = useState("สอบติด MWITS");
-
   const [preferredSlots, setPreferredSlots] = useState(2);
-  const [pricePerSlot, setPricePerSlot] = useState(800);
+  const [pricePerSlot, setPricePerSlot] = useState(500);
 
-  const [courses, setCourses] = useState<Course[]>([
-    { id: crypto.randomUUID(), name: "ปรับพื้นฐาน", sheetCount: 20 },
-    { id: crypto.randomUUID(), name: "เนื้อหาสอบเข้า", sheetCount: 60 },
-  ]);
-
+  const [courses, setCourses] = useState<Course[]>(initialCourses);
   const [exams, setExams] = useState<Exam[]>(initialExams);
   const [finalGoalExamId, setFinalGoalExamId] = useState<string | null>(
-    initialExams.length > 0 ? initialExams[0].id : null
+    initialExams.length > 0 ? initialExams[initialExams.length - 1].id : null
   );
 
   const addCourse = () => {
@@ -74,7 +77,7 @@ export function InputForm({ onCalculate }: InputFormProps) {
     setExams((prevExams) => {
       const newExams = prevExams.filter((exam) => exam.id !== id);
       if (id === finalGoalExamId) {
-        setFinalGoalExamId(newExams[0]?.id || null);
+        setFinalGoalExamId(newExams[newExams.length - 1]?.id || null);
       }
       return newExams;
     });
@@ -89,15 +92,12 @@ export function InputForm({ onCalculate }: InputFormProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (
-      studentNickname &&
       pricePerSlot > 0 &&
       courses.every((c) => c.sheetCount > 0) &&
       exams.every((ex) => ex.date) &&
       finalGoalExamId
     ) {
       onCalculate({
-        studentNickname,
-        goal,
         preferredSlots,
         courses,
         exams,
@@ -106,7 +106,7 @@ export function InputForm({ onCalculate }: InputFormProps) {
       });
     } else {
       alert(
-        "Please fill in all required fields: Nickname, Price, Sheet Counts, all Exam Dates, and select a Final Goal exam."
+        "Please fill in all required fields: Price, Sheet Counts, all Exam Dates, and select a Final Goal exam."
       );
     }
   };
@@ -117,46 +117,6 @@ export function InputForm({ onCalculate }: InputFormProps) {
       className="p-6 bg-white rounded-xl shadow-md border border-slate-200 space-y-6"
     >
       <h2 className="text-xl font-semibold text-slate-800 border-b pb-3">
-        Student Information
-      </h2>
-
-      <div className="space-y-4">
-        <div>
-          <label
-            htmlFor="nickname"
-            className="flex items-center text-sm font-medium text-slate-700 mb-1"
-          >
-            <User className="h-4 w-4 mr-2" />
-            Student Nickname (ชื่อเล่น)*
-          </label>
-          <input
-            type="text"
-            id="nickname"
-            value={studentNickname}
-            onChange={(e) => setStudentNickname(e.target.value)}
-            required
-            className="w-full p-2 border border-slate-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="goal"
-            className="flex items-center text-sm font-medium text-slate-700 mb-1"
-          >
-            <Target className="h-4 w-4 mr-2" />
-            Overall Goal (เป้าหมายหลัก)
-          </label>
-          <input
-            type="text"
-            id="goal"
-            value={goal}
-            onChange={(e) => setGoal(e.target.value)}
-            className="w-full p-2 border border-slate-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-          />
-        </div>
-      </div>
-
-      <h2 className="text-xl font-semibold text-slate-800 border-b pb-3 pt-4">
         Plan & Pricing
       </h2>
 

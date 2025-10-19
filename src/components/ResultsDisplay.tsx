@@ -102,8 +102,8 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
     isSuccess: preferredPlan.isSuccess,
     title: preferredPlan.isSuccess ? `เรียนทันสอบ!` : `เรียนไม่ทันสอบ`,
     message: preferredPlan.isSuccess
-      ? `ด้วยการเรียน ${inputs.preferredSlots} ครั้ง/สัปดาห์ น้อง ${inputs.studentNickname} จะเรียนจบทันทุกการสอบตามกำหนด`
-      : `จากแผนปัจจุบัน น้อง ${inputs.studentNickname} จะเรียนไม่ทันวันสอบ โปรดดูคำแนะนำด้านล่างเพื่อปรับแผน`,
+      ? `ด้วยการเรียน ${inputs.preferredSlots} ครั้ง/สัปดาห์ จะเรียนจบทันทุกการสอบตามกำหนด`
+      : `จากแผนปัจจุบัน จะเรียนไม่ทันวันสอบ โปรดดูคำแนะนำด้านล่างเพื่อปรับแผน`,
   };
 
   const finalGoalName =
@@ -114,9 +114,9 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
     slots: Math.ceil(requiredSlotsPerWeek),
     message:
       isFinite(requiredSlotsPerWeek) && requiredSlotsPerWeek > 0
-        ? `เพื่อที่จะเรียนให้ทันสอบ '${finalGoalName}' น้อง ${
-            inputs.studentNickname
-          } ควรเรียนอย่างน้อย ${Math.ceil(requiredSlotsPerWeek)} ครั้ง/สัปดาห์`
+        ? `เพื่อที่จะเรียนให้ทันสอบ '${finalGoalName}' ควรเรียนอย่างน้อย ${Math.ceil(
+            requiredSlotsPerWeek
+          )} ครั้ง/สัปดาห์`
         : finalGoalName
         ? `ไม่สามารถทำตามเดดไลน์ของ '${finalGoalName}' ได้ โปรดปรับวันสอบ`
         : "กรุณาเลือก Final Goal เพื่อดูคำแนะนำ",
