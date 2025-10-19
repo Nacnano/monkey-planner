@@ -29,9 +29,50 @@ const formatNumber = (num: number, digits = 0) =>
     maximumFractionDigits: digits,
   }).format(num);
 
+const COURSE_COLORS = [
+  "#3b82f6",
+  "#10b981",
+  "#f97316",
+  "#8b5cf6",
+  "#ec4899",
+  "#f59e0b",
+  "#14b8a6",
+];
+
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    const total = payload.reduce((sum, entry) => sum + entry.value, 0);
+    return (
+      <div className="p-3 bg-white border border-slate-200 rounded-lg shadow-lg text-sm">
+        <p className="font-bold mb-2">{`Slots/Week: ${label}`}</p>
+        <ul className="list-none p-0">
+          {payload.map((entry: any, index: number) => (
+            <li
+              key={`item-${index}`}
+              style={{ color: entry.color }}
+              className="flex justify-between"
+            >
+              <span>{entry.name}:</span>
+              <span className="font-semibold ml-4">
+                {formatNumber(entry.value, 1)} days
+              </span>
+            </li>
+          ))}
+        </ul>
+        <p className="font-bold border-t mt-2 pt-2 flex justify-between">
+          <span>Total:</span>
+          <span>{formatNumber(total, 1)} days</span>
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
 export function ResultsDisplay({ results }: ResultsDisplayProps) {
   const {
     inputs,
+    totalSheets,
     daysTillDeadline,
     requiredSlotsPerWeek,
     totalFee,
@@ -65,6 +106,18 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
       requiredSlotsPerWeek
     )} ครั้ง/สัปดาห์`,
   };
+
+  const chartData = timelineScenarios.slice(0, 10).map((scenario) => {
+    const scenarioData: { [key: string]: any } = {
+      slotsPerWeek: scenario.slotsPerWeek,
+    };
+    scenario.courseBreakdown.forEach((cb) => {
+      scenarioData[cb.courseName] = cb.daysToFinish;
+    });
+    return scenarioData;
+  });
+
+  const courses = results.inputs.courses;
 
   return (
     <div className="space-y-8">
@@ -139,16 +192,17 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
           <BarChart2 className="h-5 w-5 mr-2 text-purple-500" />
           Timeline Visualization
         </h3>
-        <div className="w-full h-80">
+        <div className="w-full h-96">
           <ResponsiveContainer>
             <BarChart
               layout="vertical"
-              data={timelineScenarios.slice(0, 10)}
+              data={chartData}
               margin={{ top: 5, right: 30, left: 20, bottom: 20 }}
             >
               <CartesianGrid strokeDasharray="3 3" horizontal={false} />
               <XAxis
                 type="number"
+                allowDecimals={false}
                 label={{
                   value: "Days to Finish",
                   position: "insideBottom",
@@ -166,10 +220,13 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
                 width={80}
               />
               <Tooltip
-                formatter={(value) => `${formatNumber(Number(value))} days`}
-                labelFormatter={(label) => `${label} slots/week`}
+                content={<CustomTooltip />}
+                cursor={{ fill: "rgba(241, 245, 249, 0.5)" }}
               />
-              <Legend verticalAlign="top" />
+              <Legend
+                verticalAlign="top"
+                wrapperStyle={{ paddingBottom: "1rem" }}
+              />
               <ReferenceLine
                 x={daysTillDeadline}
                 label={{
@@ -180,11 +237,15 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
                 stroke="#dc2626"
                 strokeDasharray="4 4"
               />
-              <Bar
-                dataKey="daysToFinish"
-                name="Days to Finish"
-                fill="#3b82f6"
-              />
+              {courses.map((course, index) => (
+                <Bar
+                  key={course.id}
+                  dataKey={course.name}
+                  stackId="a"
+                  name={course.name}
+                  fill={COURSE_COLORS[index % COURSE_COLORS.length]}
+                />
+              ))}
             </BarChart>
           </ResponsiveContainer>
         </div>

@@ -13,12 +13,18 @@ export interface FormData {
   pricePerSlot: number;
 }
 
+export interface CourseBreakdown {
+  courseName: string;
+  daysToFinish: number;
+}
+
 export interface TimelineAnalysis {
   slotsPerWeek: number;
   weeksToFinish: number;
   daysToFinish: number;
   isSuccess: boolean;
   monthlyFee: number;
+  courseBreakdown: CourseBreakdown[];
 }
 
 export interface CalculationResults {

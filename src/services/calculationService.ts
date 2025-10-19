@@ -1,10 +1,15 @@
-import type { FormData, CalculationResults, TimelineAnalysis } from "../types";
+import type {
+  FormData,
+  CalculationResults,
+  TimelineAnalysis,
+  CourseBreakdown,
+} from "../types";
 
 export const calculatePlan = (data: FormData): CalculationResults => {
   const { courses, dueDate, preferredSlots, pricePerSlot } = data;
 
   const totalSheets = courses.reduce(
-    (sum, course) => sum + course.sheetCount,
+    (sum, course) => sum + (course.sheetCount || 0),
     0
   );
 
@@ -19,7 +24,6 @@ export const calculatePlan = (data: FormData): CalculationResults => {
   );
   const weeksTillDeadline = daysTillDeadline / 7;
 
-  // y = 7 * (x / d)
   const requiredSlotsPerWeek =
     daysTillDeadline > 0 ? (7 * totalSheets) / daysTillDeadline : Infinity;
 
@@ -33,6 +37,7 @@ export const calculatePlan = (data: FormData): CalculationResults => {
         daysToFinish: Infinity,
         isSuccess: false,
         monthlyFee: 0,
+        courseBreakdown: [],
       };
     }
     const weeksToFinish = totalSheets / slots;
@@ -40,12 +45,18 @@ export const calculatePlan = (data: FormData): CalculationResults => {
     const isSuccess = daysToFinish <= daysTillDeadline;
     const monthlyFee = (pricePerSlot * slots * 30) / 7;
 
+    const courseBreakdown: CourseBreakdown[] = courses.map((course) => ({
+      courseName: course.name || "Unnamed Course",
+      daysToFinish: (course.sheetCount / slots) * 7,
+    }));
+
     return {
       slotsPerWeek: slots,
       weeksToFinish,
       daysToFinish,
       isSuccess,
       monthlyFee,
+      courseBreakdown,
     };
   };
 
