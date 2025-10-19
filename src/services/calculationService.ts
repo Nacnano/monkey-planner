@@ -59,14 +59,6 @@ export const calculatePlan = (data: FormData): CalculationResults => {
 
   const totalFee = totalSheets * pricePerSlot;
 
-  const areAllDeadlinesMet = (slots: number): boolean => {
-    if (slots <= 0) return false;
-    if (!earliestDeadline) return true; // No deadlines means success by default
-
-    const daysToFinish = (totalSheets / slots) * 7;
-    return daysToFinish <= earliestDeadline.daysRemaining;
-  };
-
   const calculateScenario = (slots: number): TimelineAnalysis => {
     if (slots <= 0) {
       return {
@@ -80,7 +72,12 @@ export const calculatePlan = (data: FormData): CalculationResults => {
     }
     const weeksToFinish = totalSheets / slots;
     const daysToFinish = weeksToFinish * 7;
-    const isSuccess = areAllDeadlinesMet(slots);
+
+    const targetDeadline = finalGoalDeadline || earliestDeadline;
+    const isSuccess = targetDeadline
+      ? daysToFinish <= targetDeadline.daysRemaining
+      : true;
+
     const monthlyFee = (pricePerSlot * slots * 30) / 7;
 
     const courseBreakdown: CourseBreakdown[] = courses.map((course) => ({

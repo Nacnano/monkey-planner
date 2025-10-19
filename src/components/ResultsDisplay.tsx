@@ -148,20 +148,19 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
     preferredPlan,
     timelineScenarios,
   } = results;
+  const finalGoalName =
+    inputs.exams.find((e) => e.id === inputs.finalGoalExamId)?.name ||
+    "the final goal";
 
   const summary = {
     isSuccess: preferredPlan.isSuccess,
     title: preferredPlan.isSuccess
-      ? `On Track to Succeed!`
-      : `Needs Adjustment`,
+      ? `On Track for '${finalGoalName}'!`
+      : `Needs Adjustment for '${finalGoalName}'`,
     message: preferredPlan.isSuccess
-      ? `Based on ${inputs.preferredSlots} slots/week, all deadlines will be met.`
-      : `The current plan of ${inputs.preferredSlots} slots/week won't meet the earliest deadline. See our recommendation below.`,
+      ? `Based on your plan of ${inputs.preferredSlots} slots/week, you are on track to meet the '${finalGoalName}' deadline.`
+      : `The current plan of ${inputs.preferredSlots} slots/week is not on track to meet the '${finalGoalName}' deadline. See our recommendation below.`,
   };
-
-  const finalGoalName =
-    inputs.exams.find((e) => e.id === inputs.finalGoalExamId)?.name ||
-    "the final goal";
 
   const recommendation = {
     slots: Math.ceil(requiredSlotsPerWeek),
