@@ -1,39 +1,47 @@
 import React, { useState } from "react";
-import type { Course, FormData } from "../types";
+import type { Course, Exam, FormData } from "../types";
 import {
   PlusCircle,
   User,
   Target,
-  Calendar,
   BarChart,
   DollarSign,
   Send,
+  CalendarCheck,
 } from "lucide-react";
 import { CourseInput } from "./CourseInput";
+import { ExamInput } from "./ExamInput";
 
 interface InputFormProps {
   onCalculate: (data: FormData) => void;
 }
 
 export function InputForm({ onCalculate }: InputFormProps) {
-  const [studentNickname, setStudentNickname] = useState("Fah");
-  const [goal, setGoal] = useState("สอบติดม.บูรพา");
-
-  const today = new Date();
-  today.setMonth(today.getMonth() + 12); // Default to 1 year from now
-  const [dueDate, setDueDate] = useState(today.toISOString().split("T")[0]);
+  const [studentNickname, setStudentNickname] = useState("Nac");
+  const [goal, setGoal] = useState("สอบติด MWITS");
 
   const [preferredSlots, setPreferredSlots] = useState(2);
-  const [pricePerSlot, setPricePerSlot] = useState(500);
+  const [pricePerSlot, setPricePerSlot] = useState(800);
+
+  const createDueDate = (monthsToAdd: number) => {
+    const date = new Date();
+    date.setMonth(date.getMonth() + monthsToAdd);
+    return date.toISOString().split("T")[0];
+  };
+
   const [courses, setCourses] = useState<Course[]>([
     { id: crypto.randomUUID(), name: "ปรับพื้นฐาน", sheetCount: 20 },
     { id: crypto.randomUUID(), name: "เนื้อหาสอบเข้า", sheetCount: 60 },
   ]);
 
+  const [exams, setExams] = useState<Exam[]>([
+    { id: crypto.randomUUID(), name: "สอบ MWITS", date: createDueDate(12) },
+  ]);
+
   const addCourse = () => {
     setCourses([
       ...courses,
-      { id: crypto.randomUUID(), name: "", sheetCount: 0 },
+      { id: crypto.randomUUID(), name: "", sheetCount: 10 },
     ]);
   };
 
@@ -49,25 +57,39 @@ export function InputForm({ onCalculate }: InputFormProps) {
     );
   };
 
+  const addExam = () => {
+    setExams([...exams, { id: crypto.randomUUID(), name: "", date: "" }]);
+  };
+
+  const removeExam = (id: string) => {
+    setExams(exams.filter((exam) => exam.id !== id));
+  };
+
+  const updateExam = (id: string, updatedExam: Partial<Exam>) => {
+    setExams(
+      exams.map((exam) => (exam.id === id ? { ...exam, ...updatedExam } : exam))
+    );
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (
       studentNickname &&
-      dueDate &&
       pricePerSlot > 0 &&
-      courses.every((c) => c.sheetCount > 0)
+      courses.every((c) => c.sheetCount > 0) &&
+      exams.every((ex) => ex.date)
     ) {
       onCalculate({
         studentNickname,
         goal,
-        dueDate,
         preferredSlots,
         courses,
+        exams,
         pricePerSlot,
       });
     } else {
       alert(
-        "Please fill in all required fields: Nickname, Due Date, Price, and Sheet Counts for all courses."
+        "Please fill in all required fields: Nickname, Price, Sheet Counts, and all Exam Dates."
       );
     }
   };
@@ -105,30 +127,13 @@ export function InputForm({ onCalculate }: InputFormProps) {
             className="flex items-center text-sm font-medium text-slate-700 mb-1"
           >
             <Target className="h-4 w-4 mr-2" />
-            Goal (เป้าหมาย)
+            Overall Goal (เป้าหมายหลัก)
           </label>
           <input
             type="text"
             id="goal"
             value={goal}
             onChange={(e) => setGoal(e.target.value)}
-            className="w-full p-2 border border-slate-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="dueDate"
-            className="flex items-center text-sm font-medium text-slate-700 mb-1"
-          >
-            <Calendar className="h-4 w-4 mr-2" />
-            Due Date (วันสอบ/วันสิ้นสุด)*
-          </label>
-          <input
-            type="date"
-            id="dueDate"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-            required
             className="w-full p-2 border border-slate-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
@@ -180,7 +185,6 @@ export function InputForm({ onCalculate }: InputFormProps) {
       <h2 className="text-xl font-semibold text-slate-800 border-b pb-3 pt-4">
         Courses (คอร์สเรียน)
       </h2>
-
       <div className="space-y-4">
         {courses.map((course) => (
           <CourseInput
@@ -191,7 +195,6 @@ export function InputForm({ onCalculate }: InputFormProps) {
           />
         ))}
       </div>
-
       <button
         type="button"
         onClick={addCourse}
@@ -201,9 +204,31 @@ export function InputForm({ onCalculate }: InputFormProps) {
         Add Course
       </button>
 
+      <h2 className="text-xl font-semibold text-slate-800 border-b pb-3 pt-4">
+        Exams & Deadlines (วันสอบ)
+      </h2>
+      <div className="space-y-4">
+        {exams.map((exam) => (
+          <ExamInput
+            key={exam.id}
+            exam={exam}
+            onUpdate={updateExam}
+            onRemove={removeExam}
+          />
+        ))}
+      </div>
+      <button
+        type="button"
+        onClick={addExam}
+        className="w-full flex items-center justify-center p-2 text-sm text-amber-600 font-semibold bg-amber-100 hover:bg-amber-200 rounded-md transition-colors"
+      >
+        <CalendarCheck className="h-5 w-5 mr-2" />
+        Add Exam
+      </button>
+
       <button
         type="submit"
-        className="w-full flex items-center justify-center p-3 text-base font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-md transition-transform transform hover:scale-105"
+        className="w-full flex items-center justify-center p-3 text-base font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-md transition-transform transform hover:scale-105 mt-6"
       >
         <Send className="h-5 w-5 mr-2" />
         Calculate Plan

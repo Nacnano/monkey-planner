@@ -4,12 +4,18 @@ export interface Course {
   sheetCount: number;
 }
 
+export interface Exam {
+  id: string;
+  name: string;
+  date: string;
+}
+
 export interface FormData {
   studentNickname: string;
   goal: string;
-  dueDate: string;
   preferredSlots: number;
   courses: Course[];
+  exams: Exam[];
   pricePerSlot: number;
 }
 
@@ -27,11 +33,16 @@ export interface TimelineAnalysis {
   courseBreakdown: CourseBreakdown[];
 }
 
+export interface ExamDeadline {
+  examName: string;
+  date: string;
+  daysRemaining: number;
+}
+
 export interface CalculationResults {
   inputs: FormData;
   totalSheets: number;
-  daysTillDeadline: number;
-  weeksTillDeadline: number;
+  examDeadlines: ExamDeadline[];
   requiredSlotsPerWeek: number;
   totalFee: number;
   preferredPlan: TimelineAnalysis;

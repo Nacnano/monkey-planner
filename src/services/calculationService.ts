@@ -3,10 +3,11 @@ import type {
   CalculationResults,
   TimelineAnalysis,
   CourseBreakdown,
+  ExamDeadline,
 } from "../types";
 
 export const calculatePlan = (data: FormData): CalculationResults => {
-  const { courses, dueDate, preferredSlots, pricePerSlot } = data;
+  const { courses, exams, preferredSlots, pricePerSlot } = data;
 
   const totalSheets = courses.reduce(
     (sum, course) => sum + (course.sheetCount || 0),
@@ -15,19 +16,39 @@ export const calculatePlan = (data: FormData): CalculationResults => {
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const deadline = new Date(dueDate);
-  deadline.setHours(0, 0, 0, 0);
 
-  const daysTillDeadline = Math.max(
-    0,
-    (deadline.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
-  );
-  const weeksTillDeadline = daysTillDeadline / 7;
+  const examDeadlines: ExamDeadline[] = exams
+    .filter((exam) => exam.date)
+    .map((exam) => {
+      const deadlineDate = new Date(exam.date);
+      deadlineDate.setHours(0, 0, 0, 0);
+      const daysRemaining = Math.max(
+        0,
+        (deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+      );
+      return {
+        examName: exam.name || "Unnamed Exam",
+        date: exam.date,
+        daysRemaining,
+      };
+    })
+    .sort((a, b) => a.daysRemaining - b.daysRemaining);
 
-  const requiredSlotsPerWeek =
-    daysTillDeadline > 0 ? (7 * totalSheets) / daysTillDeadline : Infinity;
+  const criticalDeadline = examDeadlines.length > 0 ? examDeadlines[0] : null;
+
+  const requiredSlotsPerWeek = criticalDeadline
+    ? (7 * totalSheets) / criticalDeadline.daysRemaining
+    : 0;
 
   const totalFee = totalSheets * pricePerSlot;
+
+  const areAllDeadlinesMet = (slots: number): boolean => {
+    if (slots <= 0) return false;
+    if (!criticalDeadline) return true; // No deadlines means success by default
+
+    const daysToFinish = (totalSheets / slots) * 7;
+    return daysToFinish <= criticalDeadline.daysRemaining;
+  };
 
   const calculateScenario = (slots: number): TimelineAnalysis => {
     if (slots <= 0) {
@@ -42,7 +63,7 @@ export const calculatePlan = (data: FormData): CalculationResults => {
     }
     const weeksToFinish = totalSheets / slots;
     const daysToFinish = weeksToFinish * 7;
-    const isSuccess = daysToFinish <= daysTillDeadline;
+    const isSuccess = areAllDeadlinesMet(slots);
     const monthlyFee = (pricePerSlot * slots * 30) / 7;
 
     const courseBreakdown: CourseBreakdown[] = courses.map((course) => ({
@@ -76,8 +97,7 @@ export const calculatePlan = (data: FormData): CalculationResults => {
   return {
     inputs: data,
     totalSheets,
-    daysTillDeadline,
-    weeksTillDeadline,
+    examDeadlines,
     requiredSlotsPerWeek,
     totalFee,
     preferredPlan,

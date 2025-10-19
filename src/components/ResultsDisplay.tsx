@@ -38,8 +38,8 @@ const COURSE_COLORS = [
   "#f59e0b",
   "#14b8a6",
 ];
+const DEADLINE_COLORS = ["#c2410c", "#be185d", "#0f766e", "#581c87"];
 
-// FIX: Define a local interface for Tooltip props to fix type errors where `payload` and `label` were not found on the imported `TooltipProps` type.
 interface CustomTooltipProps {
   active?: boolean;
   payload?: Array<{ name: string; value: number; color: string }>;
@@ -79,7 +79,8 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
 export function ResultsDisplay({ results }: ResultsDisplayProps) {
   const {
     inputs,
-    daysTillDeadline,
+    totalSheets,
+    examDeadlines,
     requiredSlotsPerWeek,
     totalFee,
     preferredPlan,
@@ -88,29 +89,22 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
 
   const summary = {
     isSuccess: preferredPlan.isSuccess,
-    title: preferredPlan.isSuccess
-      ? `เรียนทันใน ${formatNumber(preferredPlan.daysToFinish)} วัน!`
-      : `เรียนไม่ทันตามกำหนด`,
+    title: preferredPlan.isSuccess ? `เรียนทันสอบ!` : `เรียนไม่ทันสอบ`,
     message: preferredPlan.isSuccess
-      ? `ด้วยการเรียน ${inputs.preferredSlots} ครั้ง/สัปดาห์ น้อง ${
-          inputs.studentNickname
-        } จะเรียนจบก่อนเดดไลน์ ${formatNumber(
-          daysTillDeadline - preferredPlan.daysToFinish
-        )} วัน`
-      : `ต้องใช้เวลาเรียน ${formatNumber(
-          preferredPlan.daysToFinish
-        )} วัน ซึ่งเกินเดดไลน์ไป ${formatNumber(
-          preferredPlan.daysToFinish - daysTillDeadline
-        )} วัน`,
+      ? `ด้วยการเรียน ${inputs.preferredSlots} ครั้ง/สัปดาห์ น้อง ${inputs.studentNickname} จะเรียนจบทันทุกการสอบตามกำหนด`
+      : `จากแผนปัจจุบัน น้อง ${inputs.studentNickname} จะเรียนไม่ทันวันสอบ โปรดดูคำแนะนำด้านล่างเพื่อปรับแผน`,
   };
 
   const recommendation = {
     slots: Math.ceil(requiredSlotsPerWeek),
-    message: `เพื่อที่จะเรียนให้ทันเดดไลน์ (${formatNumber(
-      daysTillDeadline
-    )} วัน) น้อง ${inputs.studentNickname} ควรเรียนอย่างน้อย ${Math.ceil(
-      requiredSlotsPerWeek
-    )} ครั้ง/สัปดาห์`,
+    message:
+      isFinite(requiredSlotsPerWeek) && requiredSlotsPerWeek > 0
+        ? `เพื่อที่จะเรียนให้ทันสอบ น้อง ${
+            inputs.studentNickname
+          } ควรเรียนอย่างน้อย ${Math.ceil(requiredSlotsPerWeek)} ครั้ง/สัปดาห์`
+        : examDeadlines.length > 0
+        ? "ไม่สามารถทำตามเดดไลน์ที่กำหนดได้ โปรดปรับวันสอบที่ใกล้ที่สุด"
+        : "ไม่มีวันสอบที่กำหนดไว้ จึงไม่มีคำแนะนำเรื่องจำนวนครั้ง/สัปดาห์",
   };
 
   const chartData = timelineScenarios.slice(0, 10).map((scenario) => {
@@ -166,7 +160,9 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
             คำแนะนำ (Recommendation)
           </h3>
           <p className="text-3xl font-bold text-blue-600">
-            {recommendation.slots}{" "}
+            {isFinite(recommendation.slots) && recommendation.slots > 0
+              ? recommendation.slots
+              : "N/A"}{" "}
             <span className="text-lg font-normal text-slate-600">
               ครั้ง/สัปดาห์
             </span>
@@ -209,6 +205,7 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
               <XAxis
                 type="number"
                 allowDecimals={false}
+                domain={[0, "dataMax + 10"]}
                 label={{
                   value: "Days to Finish",
                   position: "insideBottom",
@@ -233,16 +230,21 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
                 verticalAlign="top"
                 wrapperStyle={{ paddingBottom: "1rem" }}
               />
-              <ReferenceLine
-                x={daysTillDeadline}
-                label={{
-                  value: `Deadline`,
-                  position: "insideTopRight",
-                  fill: "#dc2626",
-                }}
-                stroke="#dc2626"
-                strokeDasharray="4 4"
-              />
+
+              {examDeadlines.map((deadline, index) => (
+                <ReferenceLine
+                  key={deadline.examName}
+                  x={deadline.daysRemaining}
+                  label={{
+                    value: deadline.examName,
+                    position: "insideTopRight",
+                    fill: DEADLINE_COLORS[index % DEADLINE_COLORS.length],
+                  }}
+                  stroke={DEADLINE_COLORS[index % DEADLINE_COLORS.length]}
+                  strokeDasharray="4 4"
+                />
+              ))}
+
               {courses.map((course, index) => (
                 <Bar
                   key={course.id}
@@ -270,10 +272,10 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
                   Slots / Week
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Days to Finish
+                  Total Days to Finish
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  On Time?
+                  All Deadlines Met?
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Fee / Month
