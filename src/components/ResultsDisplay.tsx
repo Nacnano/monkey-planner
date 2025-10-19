@@ -18,6 +18,7 @@ import {
   Wallet,
   BarChart2,
   CalendarDays,
+  Clock,
 } from "lucide-react";
 
 interface ResultsDisplayProps {
@@ -96,13 +97,17 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
   return null;
 };
 
+// Define a specific interface for the custom label props
 interface DeadlineLabelProps {
+  // Props passed by Recharts <ReferenceLine /> to its label component
   viewBox?: { x?: number; y?: number };
+  // Custom props passed manually
   value: string;
   dy: number;
   fill: string;
 }
 
+// Custom Label component with an arrow for the deadline ReferenceLine
 const DeadlineLabelWithArrow = (props: DeadlineLabelProps) => {
   const { viewBox, value, dy, fill } = props;
   if (!viewBox || !viewBox.x || !viewBox.y) return null;
@@ -220,7 +225,7 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="p-6 bg-white rounded-xl shadow-md border border-slate-200">
           <h3 className="flex items-center text-lg font-semibold text-slate-700 mb-4">
             <Target className="h-5 w-5 mr-2 text-blue-500" />
@@ -258,6 +263,25 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
             <p className="text-xl font-semibold text-emerald-600">
               ฿{formatNumber(preferredPlan.monthlyFee)}
             </p>
+          </div>
+        </div>
+        <div className="p-6 bg-white rounded-xl shadow-md border border-slate-200">
+          <h3 className="flex items-center text-lg font-semibold text-slate-700 mb-4">
+            <Clock className="h-5 w-5 mr-2 text-orange-500" />
+            Deadline Countdown
+          </h3>
+          <div className="space-y-3">
+            {examDeadlines.map((deadline) => (
+              <div
+                key={deadline.examName}
+                className="flex justify-between items-center text-slate-600"
+              >
+                <span>{deadline.examName}</span>
+                <span className="font-bold text-orange-600 bg-orange-100 px-2 py-1 rounded-md text-sm">
+                  {formatNumber(deadline.daysRemaining)} days
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
