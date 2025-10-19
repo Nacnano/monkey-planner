@@ -19,6 +19,7 @@ import {
   BarChart2,
   CalendarDays,
   Clock,
+  Award,
 } from "lucide-react";
 
 interface ResultsDisplayProps {
@@ -32,8 +33,7 @@ const formatNumber = (num: number, digits = 0) =>
 
 const formatDate = (dateString: string) => {
   if (!dateString || !dateString.includes("-")) return "";
-  const [year, month, day] = dateString.split("-").map(Number);
-  const date = new Date(year, month - 1, day);
+  const date = new Date(dateString + "T00:00:00"); // Ensure date is parsed in local timezone
   return date.toLocaleDateString("en-GB", {
     day: "numeric",
     month: "short",
@@ -51,15 +51,15 @@ const formatDaysToDate = (days: number): string => {
 };
 
 const COURSE_COLORS = [
-  "#3b82f6",
+  "#0ea5e9",
   "#10b981",
+  "#a855f7",
   "#f97316",
-  "#8b5cf6",
   "#ec4899",
   "#f59e0b",
   "#14b8a6",
-];
-const DEADLINE_COLORS = ["#c2410c", "#be185d", "#0f766e", "#581c87"];
+]; // sky, emerald, violet, orange, pink, amber, teal
+const DEADLINE_COLORS = ["#ef4444", "#d946ef", "#0891b2", "#84cc16"]; // red, fuchsia, cyan, lime
 
 interface CustomTooltipProps {
   active?: boolean;
@@ -71,23 +71,23 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
     const total = payload.reduce((sum, entry) => sum + (entry.value || 0), 0);
     return (
-      <div className="p-3 bg-white border border-slate-200 rounded-lg shadow-lg text-sm">
-        <p className="font-bold mb-2">{`Slots/Week: ${label}`}</p>
-        <ul className="list-none p-0">
+      <div className="p-3 bg-white border border-gray-200 rounded-lg shadow-xl text-sm">
+        <p className="font-bold text-gray-800 mb-2">{`Slots/Week: ${label}`}</p>
+        <ul className="list-none p-0 space-y-1">
           {payload.map((entry, index) => (
             <li
               key={`item-${index}`}
               style={{ color: entry.color }}
-              className="flex justify-between"
+              className="flex justify-between items-center"
             >
-              <span>{entry.name}:</span>
-              <span className="font-semibold ml-4">
+              <span className="font-medium">{entry.name}:</span>
+              <span className="font-bold ml-4">
                 {formatNumber(entry.value || 0, 1)} days
               </span>
             </li>
           ))}
         </ul>
-        <p className="font-bold border-t mt-2 pt-2 flex justify-between">
+        <p className="font-extrabold text-gray-900 border-t border-gray-200 mt-2 pt-2 flex justify-between">
           <span>Total:</span>
           <span>{formatNumber(total, 1)} days</span>
         </p>
@@ -97,17 +97,13 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
   return null;
 };
 
-// Define a specific interface for the custom label props
 interface DeadlineLabelProps {
-  // Props passed by Recharts <ReferenceLine /> to its label component
   viewBox?: { x?: number; y?: number };
-  // Custom props passed manually
   value: string;
   dy: number;
   fill: string;
 }
 
-// Custom Label component with an arrow for the deadline ReferenceLine
 const DeadlineLabelWithArrow = (props: DeadlineLabelProps) => {
   const { viewBox, value, dy, fill } = props;
   if (!viewBox || !viewBox.x || !viewBox.y) return null;
@@ -156,10 +152,12 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
 
   const summary = {
     isSuccess: preferredPlan.isSuccess,
-    title: preferredPlan.isSuccess ? `เรียนทันสอบ!` : `เรียนไม่ทันสอบ`,
+    title: preferredPlan.isSuccess
+      ? `On Track to Succeed!`
+      : `Needs Adjustment`,
     message: preferredPlan.isSuccess
-      ? `ด้วยการเรียน ${inputs.preferredSlots} ครั้ง/สัปดาห์ จะเรียนจบทันทุกการสอบตามกำหนด`
-      : `จากแผนปัจจุบัน จะเรียนไม่ทันวันสอบ โปรดดูคำแนะนำด้านล่างเพื่อปรับแผน`,
+      ? `Based on ${inputs.preferredSlots} slots/week, all deadlines will be met.`
+      : `The current plan of ${inputs.preferredSlots} slots/week won't meet the earliest deadline. See our recommendation below.`,
   };
 
   const finalGoalName =
@@ -170,12 +168,12 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
     slots: Math.ceil(requiredSlotsPerWeek),
     message:
       isFinite(requiredSlotsPerWeek) && requiredSlotsPerWeek > 0
-        ? `เพื่อที่จะเรียนให้ทันสอบ '${finalGoalName}' ควรเรียนอย่างน้อย ${Math.ceil(
+        ? `To meet the '${finalGoalName}' deadline, a minimum of ${Math.ceil(
             requiredSlotsPerWeek
-          )} ครั้ง/สัปดาห์`
+          )} slots/week is recommended.`
         : finalGoalName
-        ? `ไม่สามารถทำตามเดดไลน์ของ '${finalGoalName}' ได้ โปรดปรับวันสอบ`
-        : "กรุณาเลือก Final Goal เพื่อดูคำแนะนำ",
+        ? `The deadline for '${finalGoalName}' is not feasible with the current workload. Please adjust.`
+        : "Please select a Final Goal to see a recommendation.",
   };
 
   const chartData = timelineScenarios.slice(0, 10).map((scenario) => {
@@ -192,31 +190,31 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
   const courses = results.inputs.courses;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-fade-in">
       <div
-        className={`p-6 rounded-xl shadow-lg border ${
+        className={`p-6 rounded-2xl shadow-lg border ${
           summary.isSuccess
-            ? "bg-green-50 border-green-200"
-            : "bg-red-50 border-red-200"
+            ? "bg-green-100 border-green-300"
+            : "bg-red-100 border-red-300"
         }`}
       >
         <div className="flex items-center">
           {summary.isSuccess ? (
-            <CheckCircle2 className="h-8 w-8 text-green-600 mr-4" />
+            <CheckCircle2 className="h-10 w-10 text-green-600 mr-4 flex-shrink-0" />
           ) : (
-            <XCircle className="h-8 w-8 text-red-600 mr-4" />
+            <XCircle className="h-10 w-10 text-red-600 mr-4 flex-shrink-0" />
           )}
           <div>
             <h2
-              className={`text-2xl font-bold ${
-                summary.isSuccess ? "text-green-800" : "text-red-800"
+              className={`text-2xl font-extrabold ${
+                summary.isSuccess ? "text-green-900" : "text-red-900"
               }`}
             >
               {summary.title}
             </h2>
             <p
-              className={`mt-1 ${
-                summary.isSuccess ? "text-green-700" : "text-red-700"
+              className={`mt-1 text-base ${
+                summary.isSuccess ? "text-green-800" : "text-red-800"
               }`}
             >
               {summary.message}
@@ -226,58 +224,68 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="p-6 bg-white rounded-xl shadow-md border border-slate-200">
-          <h3 className="flex items-center text-lg font-semibold text-slate-700 mb-4">
-            <Target className="h-5 w-5 mr-2 text-blue-500" />
-            คำแนะนำ (Recommendation)
-          </h3>
-          <p className="text-3xl font-bold text-blue-600">
+        <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200 flex flex-col">
+          <div className="flex items-center mb-4">
+            <div className="p-3 bg-sky-100 rounded-full mr-4">
+              <Award className="h-6 w-6 text-sky-600" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-800">Recommendation</h3>
+          </div>
+          <p className="text-5xl font-extrabold text-sky-600">
             {isFinite(recommendation.slots) && recommendation.slots > 0
               ? recommendation.slots
-              : "N/A"}{" "}
-            <span className="text-lg font-normal text-slate-600">
-              ครั้ง/สัปดาห์
-            </span>
+              : "N/A"}
           </p>
-          <p className="mt-2 text-slate-600">{recommendation.message}</p>
+          <p className="text-lg font-medium text-gray-500 -mt-1">Slots/Week</p>
+          <p className="mt-4 text-gray-600 text-sm flex-grow">
+            {recommendation.message}
+          </p>
         </div>
-        <div className="p-6 bg-white rounded-xl shadow-md border border-slate-200">
-          <h3 className="flex items-center text-lg font-semibold text-slate-700 mb-4">
-            <Wallet className="h-5 w-5 mr-2 text-emerald-500" />
-            สรุปค่าใช้จ่าย (Budget)
-          </h3>
-          <div className="flex justify-between items-baseline">
-            <span className="text-slate-600">จำนวนชีททั้งหมด</span>
-            <p className="text-lg font-semibold text-slate-700">
-              {formatNumber(totalSheets)}
-            </p>
+        <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200">
+          <div className="flex items-center mb-4">
+            <div className="p-3 bg-emerald-100 rounded-full mr-4">
+              <Wallet className="h-6 w-6 text-emerald-600" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-800">Budget</h3>
           </div>
-          <div className="flex justify-between items-baseline mt-2">
-            <span className="text-slate-600">ค่าเรียนทั้งหมด</span>
-            <p className="text-3xl font-bold text-emerald-600">
-              ฿{formatNumber(totalFee)}
-            </p>
-          </div>
-          <div className="flex justify-between items-baseline mt-2">
-            <span className="text-slate-600">ค่าเรียน/เดือน (ตามแผน)</span>
-            <p className="text-xl font-semibold text-emerald-600">
-              ฿{formatNumber(preferredPlan.monthlyFee)}
-            </p>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">Total Sheets</span>
+              <p className="text-lg font-bold text-gray-800">
+                {formatNumber(totalSheets)}
+              </p>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">Fee/Month (Plan)</span>
+              <p className="text-lg font-bold text-gray-800">
+                ฿{formatNumber(preferredPlan.monthlyFee)}
+              </p>
+            </div>
+            <div className="flex justify-between items-center border-t pt-3 mt-3">
+              <span className="text-gray-600 font-bold">Total Fee</span>
+              <p className="text-3xl font-extrabold text-emerald-600">
+                ฿{formatNumber(totalFee)}
+              </p>
+            </div>
           </div>
         </div>
-        <div className="p-6 bg-white rounded-xl shadow-md border border-slate-200">
-          <h3 className="flex items-center text-lg font-semibold text-slate-700 mb-4">
-            <Clock className="h-5 w-5 mr-2 text-orange-500" />
-            Deadline Countdown
-          </h3>
+        <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200">
+          <div className="flex items-center mb-4">
+            <div className="p-3 bg-amber-100 rounded-full mr-4">
+              <Clock className="h-6 w-6 text-amber-600" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-800">
+              Deadline Countdown
+            </h3>
+          </div>
           <div className="space-y-3">
             {examDeadlines.map((deadline) => (
               <div
                 key={deadline.examName}
-                className="flex justify-between items-center text-slate-600"
+                className="flex justify-between items-center text-gray-600"
               >
                 <span>{deadline.examName}</span>
-                <span className="font-bold text-orange-600 bg-orange-100 px-2 py-1 rounded-md text-sm">
+                <span className="font-bold text-amber-700 bg-amber-100 px-2.5 py-1 rounded-full text-sm">
                   {formatNumber(deadline.daysRemaining)} days
                 </span>
               </div>
@@ -286,9 +294,9 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
         </div>
       </div>
 
-      <div className="p-6 bg-white rounded-xl shadow-md border border-slate-200">
-        <h3 className="flex items-center text-lg font-semibold text-slate-700 mb-4">
-          <BarChart2 className="h-5 w-5 mr-2 text-purple-500" />
+      <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200">
+        <h3 className="flex items-center text-xl font-bold text-gray-800 mb-4">
+          <BarChart2 className="h-6 w-6 mr-3 text-violet-500" />
           Timeline Visualization
         </h3>
         <div className="w-full h-96">
@@ -298,7 +306,11 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
               data={chartData}
               margin={{ top: 100, right: 30, left: 20, bottom: 20 }}
             >
-              <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="#e5e7eb"
+                horizontal={false}
+              />
               <XAxis
                 type="number"
                 allowDecimals={false}
@@ -307,7 +319,10 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
                   value: "Days to Finish",
                   position: "insideBottom",
                   offset: -5,
+                  fill: "#6b7280",
                 }}
+                stroke="#9ca3af"
+                tick={{ fill: "#6b7280", fontSize: 12 }}
               />
               <XAxis
                 xAxisId="dateAxis"
@@ -328,16 +343,19 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
                   value: "Slots per Week",
                   angle: -90,
                   position: "insideLeft",
+                  fill: "#6b7280",
                 }}
                 width={80}
+                stroke="#9ca3af"
+                tick={{ fill: "#6b7280", fontSize: 12 }}
               />
               <Tooltip
                 content={<CustomTooltip />}
-                cursor={{ fill: "rgba(241, 245, 249, 0.5)" }}
+                cursor={{ fill: "rgba(241, 245, 249, 0.7)" }}
               />
               <Legend
                 verticalAlign="bottom"
-                wrapperStyle={{ paddingTop: "1rem" }}
+                wrapperStyle={{ paddingTop: "2rem" }}
               />
 
               {courses.map((course, index) => (
@@ -362,7 +380,7 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
                       value={`${deadline.examName} (${formatDate(
                         deadline.date
                       )})`}
-                      dy={-(45 + (index % 3) * 20)}
+                      dy={-(45 + (index % 3) * 25)}
                       fill={DEADLINE_COLORS[index % DEADLINE_COLORS.length]}
                     />
                   }
@@ -373,43 +391,42 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
         </div>
       </div>
 
-      <div className="p-6 bg-white rounded-xl shadow-md border border-slate-200">
-        <h3 className="flex items-center text-lg font-semibold text-slate-700 mb-4">
-          <CalendarDays className="h-5 w-5 mr-2 text-indigo-500" />
+      <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200">
+        <h3 className="flex items-center text-xl font-bold text-gray-800 mb-4">
+          <CalendarDays className="h-6 w-6 mr-3 text-indigo-500" />
           Timeline Scenarios
         </h3>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left text-slate-500">
-            <thead className="text-xs text-slate-700 uppercase bg-slate-100">
+          <table className="w-full text-sm text-left text-gray-500">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-100">
               <tr>
-                <th scope="col" className="px-6 py-3">
+                <th scope="col" className="px-6 py-3 rounded-l-lg">
                   Slots / Week
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Total Days to Finish
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  All Deadlines Met?
+                  Deadlines Met?
                 </th>
-                <th scope="col" className="px-6 py-3">
+                <th scope="col" className="px-6 py-3 rounded-r-lg">
                   Fee / Month
                 </th>
               </tr>
             </thead>
             <tbody>
-              {timelineScenarios.map((s) => (
+              {timelineScenarios.map((s, index) => (
                 <tr
                   key={s.slotsPerWeek}
-                  className={`border-b ${
+                  className={`border-b border-gray-100 ${
+                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                  } ${
                     s.slotsPerWeek === inputs.preferredSlots
-                      ? "bg-blue-50"
-                      : "bg-white"
+                      ? "!bg-sky-100 font-bold text-sky-800"
+                      : ""
                   }`}
                 >
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-slate-900 whitespace-nowrap"
-                  >
+                  <th scope="row" className="px-6 py-4 whitespace-nowrap">
                     {s.slotsPerWeek}
                   </th>
                   <td className="px-6 py-4">
@@ -418,15 +435,29 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
                       : "N/A"}
                   </td>
                   <td className="px-6 py-4">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                        s.isSuccess
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {s.isSuccess ? "Yes" : "No"}
-                    </span>
+                    {s.isSuccess ? (
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        <svg
+                          className="-ml-0.5 mr-1.5 h-2 w-2 text-green-400"
+                          fill="currentColor"
+                          viewBox="0 0 8 8"
+                        >
+                          <circle cx="4" cy="4" r="3" />
+                        </svg>
+                        Yes
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                        <svg
+                          className="-ml-0.5 mr-1.5 h-2 w-2 text-red-400"
+                          fill="currentColor"
+                          viewBox="0 0 8 8"
+                        >
+                          <circle cx="4" cy="4" r="3" />
+                        </svg>
+                        No
+                      </span>
+                    )}
                   </td>
                   <td className="px-6 py-4">฿{formatNumber(s.monthlyFee)}</td>
                 </tr>

@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { BookOpen, Target, HelpCircle } from "lucide-react";
+import React, { useState, useMemo, useCallback } from "react";
+import { BookOpen, Target, HelpCircle, AlertTriangle } from "lucide-react";
 import { InputForm } from "@/components/InputForm";
 import { ResultsDisplay } from "@/components/ResultsDisplay";
 import type { FormData, CalculationResults } from "@/types";
@@ -10,10 +10,14 @@ import { calculatePlan } from "@/services/calculationService";
 function App() {
   const [results, setResults] = useState<CalculationResults | null>(null);
 
-  const handleCalculate = (data: FormData) => {
-    const calculationResults = calculatePlan(data);
-    setResults(calculationResults);
-  };
+  const handleCalculate = useCallback((data: FormData | null) => {
+    if (data) {
+      const calculationResults = calculatePlan(data);
+      setResults(calculationResults);
+    } else {
+      setResults(null);
+    }
+  }, []);
 
   const assumptions = [
     "ชีท 1 ชุด = 1 slot = 2 ชั่วโมง",
@@ -23,52 +27,54 @@ function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-800 font-sans p-4 sm:p-6 lg:p-8">
-      <main className="max-w-6xl mx-auto">
-        <header className="text-center mb-8">
+    <div className="min-h-screen bg-gray-50 text-gray-800 p-4 sm:p-6 lg:p-8">
+      <main className="max-w-7xl mx-auto">
+        <header className="text-center mb-10">
           <div className="flex justify-center items-center gap-3">
-            <BookOpen className="h-10 w-10 text-blue-600" />
-            <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
+            <BookOpen className="h-10 w-10 text-sky-600" />
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
               Course & Budget Planner
             </h1>
           </div>
-          <p className="mt-2 text-lg text-slate-600">
+          <p className="mt-3 text-lg text-gray-600 max-w-2xl mx-auto">
             วางแผนการเรียนและประเมินค่าใช้จ่ายสู่เป้าหมายของนักเรียน
           </p>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-1">
-            <InputForm onCalculate={handleCalculate} />
-            <div className="mt-8 p-6 bg-white rounded-xl shadow-md border border-slate-200">
-              <h3 className="flex items-center text-lg font-semibold text-slate-700 mb-4">
-                <HelpCircle className="h-5 w-5 mr-2 text-amber-500" />
-                ข้อสมมติฐาน (Assumptions)
-              </h3>
-              <ul className="space-y-2 text-slate-600">
-                {assumptions.map((item, index) => (
-                  <li key={index} className="flex items-start">
-                    <span className="text-amber-500 font-bold mr-2">
-                      {index + 1}.
-                    </span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+          <div className="lg:col-span-2">
+            <div className="space-y-8">
+              <InputForm onCalculate={handleCalculate} />
+              <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200">
+                <h3 className="flex items-center text-lg font-bold text-gray-800 mb-4">
+                  <HelpCircle className="h-6 w-6 mr-3 text-amber-500" />
+                  ข้อสมมติฐาน (Assumptions)
+                </h3>
+                <ul className="space-y-3 text-gray-600">
+                  {assumptions.map((item, index) => (
+                    <li key={index} className="flex items-start">
+                      <span className="flex items-center justify-center h-6 w-6 rounded-full bg-amber-100 text-amber-600 font-bold text-sm mr-3 flex-shrink-0">
+                        {index + 1}
+                      </span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
 
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-3">
             {results ? (
               <ResultsDisplay results={results} />
             ) : (
-              <div className="flex flex-col items-center justify-center h-full bg-white rounded-xl shadow-lg border border-slate-200 p-8">
+              <div className="flex flex-col items-center justify-center h-full bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
                 <div className="text-center">
-                  <Target className="h-16 w-16 mx-auto text-slate-400 mb-4" />
-                  <h2 className="text-2xl font-semibold text-slate-700">
+                  <Target className="h-20 w-20 mx-auto text-gray-300 mb-4" />
+                  <h2 className="text-2xl font-bold text-gray-800">
                     Your Plan Awaits
                   </h2>
-                  <p className="mt-2 text-slate-500">
+                  <p className="mt-2 text-gray-500 max-w-sm mx-auto">
                     กรอกข้อมูลด้านซ้ายเพื่อเริ่มการคำนวณและวางแผนการเรียน
                   </p>
                 </div>
@@ -77,7 +83,7 @@ function App() {
           </div>
         </div>
 
-        <footer className="text-center mt-12 text-sm text-slate-500">
+        <footer className="text-center mt-16 text-sm text-gray-500">
           <p>
             &copy; {new Date().getFullYear()} Course Planner. Built for clarity
             and confidence.

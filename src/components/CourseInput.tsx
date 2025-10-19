@@ -10,11 +10,11 @@ interface CourseInputProps {
 
 export function CourseInput({ course, onUpdate, onRemove }: CourseInputProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto] items-end gap-2 p-3 bg-slate-50 border border-slate-200 rounded-lg">
+    <div className="flex items-end gap-2 p-3 border border-gray-200 rounded-lg">
       <div className="flex-grow">
         <label
           htmlFor={`courseName-${course.id}`}
-          className="text-xs font-medium text-slate-600"
+          className="text-xs font-medium text-gray-500"
         >
           Course Name
         </label>
@@ -25,15 +25,15 @@ export function CourseInput({ course, onUpdate, onRemove }: CourseInputProps) {
           value={course.name}
           onChange={(e) => onUpdate(course.id, { name: e.target.value })}
           required
-          className="w-full p-2 border border-slate-300 rounded-md shadow-sm text-sm focus:ring-blue-500 focus:border-blue-500"
+          className="w-full p-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm text-sm focus:ring-sky-500 focus:border-sky-500"
         />
       </div>
-      <div className="w-28">
+      <div className="w-28 flex-shrink-0">
         <label
           htmlFor={`sheetCount-${course.id}`}
-          className="text-xs font-medium text-slate-600"
+          className="text-xs font-medium text-gray-500"
         >
-          Sheets* (จำนวนชีท)
+          Sheets*
         </label>
         <input
           type="number"
@@ -44,13 +44,13 @@ export function CourseInput({ course, onUpdate, onRemove }: CourseInputProps) {
             onUpdate(course.id, { sheetCount: Number(e.target.value) })
           }
           required
-          className="w-full p-2 border border-slate-300 rounded-md shadow-sm text-sm focus:ring-blue-500 focus:border-blue-500"
+          className="w-full p-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm text-sm focus:ring-sky-500 focus:border-sky-500"
         />
       </div>
       <button
         type="button"
         onClick={() => onRemove(course.id)}
-        className="p-2 h-10 text-slate-500 hover:text-red-600 hover:bg-red-100 rounded-md transition-colors"
+        className="p-2 h-10 text-gray-500 hover:text-red-600 hover:bg-red-100 rounded-md transition-colors flex-shrink-0"
       >
         <Trash2 className="h-5 w-5" />
       </button>
