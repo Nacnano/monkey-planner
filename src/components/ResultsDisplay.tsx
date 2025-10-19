@@ -32,7 +32,6 @@ const formatNumber = (num: number, digits = 0) =>
 export function ResultsDisplay({ results }: ResultsDisplayProps) {
   const {
     inputs,
-    totalSheets,
     daysTillDeadline,
     requiredSlotsPerWeek,
     totalFee,

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import type { Course, FormData } from "../types";
 import {
   PlusCircle,
-  Trash2,
   User,
   Target,
   Calendar,
@@ -183,7 +182,7 @@ export function InputForm({ onCalculate }: InputFormProps) {
       </h2>
 
       <div className="space-y-4">
-        {courses.map((course, index) => (
+        {courses.map((course) => (
           <CourseInput
             key={course.id}
             course={course}

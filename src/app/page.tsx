@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useMemo, use } from "react";
-import { BookOpen, Target, Calendar, HelpCircle } from "lucide-react";
+import React, { useState } from "react";
+import { BookOpen, Target, HelpCircle } from "lucide-react";
 import { InputForm } from "@/components/InputForm";
 import { ResultsDisplay } from "@/components/ResultsDisplay";
 import type { FormData, CalculationResults } from "@/types";
