@@ -186,6 +186,12 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
             สรุปค่าใช้จ่าย (Budget)
           </h3>
           <div className="flex justify-between items-baseline">
+            <span className="text-slate-600">จำนวนชีททั้งหมด</span>
+            <p className="text-lg font-semibold text-slate-700">
+              {formatNumber(totalSheets)}
+            </p>
+          </div>
+          <div className="flex justify-between items-baseline mt-2">
             <span className="text-slate-600">ค่าเรียนทั้งหมด</span>
             <p className="text-3xl font-bold text-emerald-600">
               ฿{formatNumber(totalFee)}
