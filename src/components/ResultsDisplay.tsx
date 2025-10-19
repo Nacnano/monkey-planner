@@ -142,30 +142,39 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
         <div className="w-full h-80">
           <ResponsiveContainer>
             <BarChart
+              layout="vertical"
               data={timelineScenarios.slice(0, 10)}
-              margin={{ top: 5, right: 20, left: -10, bottom: 5 }}
+              margin={{ top: 5, right: 30, left: 20, bottom: 20 }}
             >
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" horizontal={false} />
               <XAxis
-                dataKey="slotsPerWeek"
+                type="number"
                 label={{
-                  value: "Slots per Week",
+                  value: "Days to Finish",
                   position: "insideBottom",
                   offset: -5,
                 }}
               />
               <YAxis
-                label={{ value: "Days", angle: -90, position: "insideLeft" }}
+                type="category"
+                dataKey="slotsPerWeek"
+                label={{
+                  value: "Slots per Week",
+                  angle: -90,
+                  position: "insideLeft",
+                }}
+                width={80}
               />
               <Tooltip
                 formatter={(value) => `${formatNumber(Number(value))} days`}
+                labelFormatter={(label) => `${label} slots/week`}
               />
-              <Legend />
+              <Legend verticalAlign="top" />
               <ReferenceLine
-                y={daysTillDeadline}
+                x={daysTillDeadline}
                 label={{
-                  value: `Deadline: ${formatNumber(daysTillDeadline)} days`,
-                  position: "insideTopLeft",
+                  value: `Deadline`,
+                  position: "insideTopRight",
                   fill: "#dc2626",
                 }}
                 stroke="#dc2626"
