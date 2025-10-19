@@ -106,16 +106,20 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
       : `จากแผนปัจจุบัน น้อง ${inputs.studentNickname} จะเรียนไม่ทันวันสอบ โปรดดูคำแนะนำด้านล่างเพื่อปรับแผน`,
   };
 
+  const finalGoalName =
+    inputs.exams.find((e) => e.id === inputs.finalGoalExamId)?.name ||
+    "the final goal";
+
   const recommendation = {
     slots: Math.ceil(requiredSlotsPerWeek),
     message:
       isFinite(requiredSlotsPerWeek) && requiredSlotsPerWeek > 0
-        ? `เพื่อที่จะเรียนให้ทันสอบ น้อง ${
+        ? `เพื่อที่จะเรียนให้ทันสอบ '${finalGoalName}' น้อง ${
             inputs.studentNickname
           } ควรเรียนอย่างน้อย ${Math.ceil(requiredSlotsPerWeek)} ครั้ง/สัปดาห์`
-        : examDeadlines.length > 0
-        ? "ไม่สามารถทำตามเดดไลน์ที่กำหนดได้ โปรดปรับวันสอบที่ใกล้ที่สุด"
-        : "ไม่มีวันสอบที่กำหนดไว้ จึงไม่มีคำแนะนำเรื่องจำนวนครั้ง/สัปดาห์",
+        : finalGoalName
+        ? `ไม่สามารถทำตามเดดไลน์ของ '${finalGoalName}' ได้ โปรดปรับวันสอบ`
+        : "กรุณาเลือก Final Goal เพื่อดูคำแนะนำ",
   };
 
   const chartData = timelineScenarios.slice(0, 10).map((scenario) => {

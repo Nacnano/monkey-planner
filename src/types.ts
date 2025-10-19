@@ -17,6 +17,7 @@ export interface FormData {
   courses: Course[];
   exams: Exam[];
   pricePerSlot: number;
+  finalGoalExamId: string | null;
 }
 
 export interface CourseBreakdown {

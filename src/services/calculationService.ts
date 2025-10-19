@@ -7,7 +7,8 @@ import type {
 } from "../types";
 
 export const calculatePlan = (data: FormData): CalculationResults => {
-  const { courses, exams, preferredSlots, pricePerSlot } = data;
+  const { courses, exams, preferredSlots, pricePerSlot, finalGoalExamId } =
+    data;
 
   const totalSheets = courses.reduce(
     (sum, course) => sum + (course.sheetCount || 0),
@@ -34,20 +35,36 @@ export const calculatePlan = (data: FormData): CalculationResults => {
     })
     .sort((a, b) => a.daysRemaining - b.daysRemaining);
 
-  const criticalDeadline = examDeadlines.length > 0 ? examDeadlines[0] : null;
+  const earliestDeadline = examDeadlines.length > 0 ? examDeadlines[0] : null;
 
-  const requiredSlotsPerWeek = criticalDeadline
-    ? (7 * totalSheets) / criticalDeadline.daysRemaining
+  const finalGoalExam = exams.find((exam) => exam.id === finalGoalExamId);
+  let finalGoalDeadline: ExamDeadline | null = null;
+  if (finalGoalExam && finalGoalExam.date) {
+    const deadlineDate = new Date(finalGoalExam.date);
+    deadlineDate.setHours(0, 0, 0, 0);
+    const daysRemaining = Math.max(
+      0,
+      (deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+    );
+    finalGoalDeadline = {
+      examName: finalGoalExam.name || "Final Goal",
+      date: finalGoalExam.date,
+      daysRemaining,
+    };
+  }
+
+  const requiredSlotsPerWeek = finalGoalDeadline
+    ? (7 * totalSheets) / finalGoalDeadline.daysRemaining
     : 0;
 
   const totalFee = totalSheets * pricePerSlot;
 
   const areAllDeadlinesMet = (slots: number): boolean => {
     if (slots <= 0) return false;
-    if (!criticalDeadline) return true; // No deadlines means success by default
+    if (!earliestDeadline) return true; // No deadlines means success by default
 
     const daysToFinish = (totalSheets / slots) * 7;
-    return daysToFinish <= criticalDeadline.daysRemaining;
+    return daysToFinish <= earliestDeadline.daysRemaining;
   };
 
   const calculateScenario = (slots: number): TimelineAnalysis => {

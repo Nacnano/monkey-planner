@@ -16,6 +16,16 @@ interface InputFormProps {
   onCalculate: (data: FormData) => void;
 }
 
+const createDueDate = (monthsToAdd: number) => {
+  const date = new Date();
+  date.setMonth(date.getMonth() + monthsToAdd);
+  return date.toISOString().split("T")[0];
+};
+
+const initialExams: Exam[] = [
+  { id: crypto.randomUUID(), name: "สอบ MWITS", date: createDueDate(12) },
+];
+
 export function InputForm({ onCalculate }: InputFormProps) {
   const [studentNickname, setStudentNickname] = useState("Nac");
   const [goal, setGoal] = useState("สอบติด MWITS");
@@ -23,20 +33,15 @@ export function InputForm({ onCalculate }: InputFormProps) {
   const [preferredSlots, setPreferredSlots] = useState(2);
   const [pricePerSlot, setPricePerSlot] = useState(800);
 
-  const createDueDate = (monthsToAdd: number) => {
-    const date = new Date();
-    date.setMonth(date.getMonth() + monthsToAdd);
-    return date.toISOString().split("T")[0];
-  };
-
   const [courses, setCourses] = useState<Course[]>([
     { id: crypto.randomUUID(), name: "ปรับพื้นฐาน", sheetCount: 20 },
     { id: crypto.randomUUID(), name: "เนื้อหาสอบเข้า", sheetCount: 60 },
   ]);
 
-  const [exams, setExams] = useState<Exam[]>([
-    { id: crypto.randomUUID(), name: "สอบ MWITS", date: createDueDate(12) },
-  ]);
+  const [exams, setExams] = useState<Exam[]>(initialExams);
+  const [finalGoalExamId, setFinalGoalExamId] = useState<string | null>(
+    initialExams.length > 0 ? initialExams[0].id : null
+  );
 
   const addCourse = () => {
     setCourses([
@@ -58,11 +63,21 @@ export function InputForm({ onCalculate }: InputFormProps) {
   };
 
   const addExam = () => {
-    setExams([...exams, { id: crypto.randomUUID(), name: "", date: "" }]);
+    const newExam = { id: crypto.randomUUID(), name: "", date: "" };
+    setExams([...exams, newExam]);
+    if (exams.length === 0) {
+      setFinalGoalExamId(newExam.id);
+    }
   };
 
   const removeExam = (id: string) => {
-    setExams(exams.filter((exam) => exam.id !== id));
+    setExams((prevExams) => {
+      const newExams = prevExams.filter((exam) => exam.id !== id);
+      if (id === finalGoalExamId) {
+        setFinalGoalExamId(newExams[0]?.id || null);
+      }
+      return newExams;
+    });
   };
 
   const updateExam = (id: string, updatedExam: Partial<Exam>) => {
@@ -77,7 +92,8 @@ export function InputForm({ onCalculate }: InputFormProps) {
       studentNickname &&
       pricePerSlot > 0 &&
       courses.every((c) => c.sheetCount > 0) &&
-      exams.every((ex) => ex.date)
+      exams.every((ex) => ex.date) &&
+      finalGoalExamId
     ) {
       onCalculate({
         studentNickname,
@@ -86,10 +102,11 @@ export function InputForm({ onCalculate }: InputFormProps) {
         courses,
         exams,
         pricePerSlot,
+        finalGoalExamId,
       });
     } else {
       alert(
-        "Please fill in all required fields: Nickname, Price, Sheet Counts, and all Exam Dates."
+        "Please fill in all required fields: Nickname, Price, Sheet Counts, all Exam Dates, and select a Final Goal exam."
       );
     }
   };
@@ -214,6 +231,8 @@ export function InputForm({ onCalculate }: InputFormProps) {
             exam={exam}
             onUpdate={updateExam}
             onRemove={removeExam}
+            isFinalGoal={exam.id === finalGoalExamId}
+            onSetFinalGoal={setFinalGoalExamId}
           />
         ))}
       </div>
