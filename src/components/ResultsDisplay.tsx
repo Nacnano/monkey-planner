@@ -41,6 +41,16 @@ const formatDate = (dateString: string) => {
   });
 };
 
+const formatDaysToDate = (days: number): string => {
+  if (typeof days !== "number" || !isFinite(days) || days < 0) return "";
+  const futureDate = new Date();
+  futureDate.setDate(futureDate.getDate() + days);
+  return futureDate.toLocaleDateString("en-GB", {
+    month: "short",
+    year: "numeric",
+  });
+};
+
 const COURSE_COLORS = [
   "#3b82f6",
   "#10b981",
@@ -124,8 +134,9 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
   };
 
   const chartData = timelineScenarios.slice(0, 10).map((scenario) => {
-    const scenarioData: { [key: string]: number } = {
+    const scenarioData: { [key: string]: number | string } = {
       slotsPerWeek: scenario.slotsPerWeek,
+      totalDays: scenario.daysToFinish,
     };
     scenario.courseBreakdown.forEach((cb) => {
       scenarioData[cb.courseName] = cb.daysToFinish;
@@ -221,18 +232,30 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
             <BarChart
               layout="vertical"
               data={chartData}
-              margin={{ top: 70, right: 30, left: 20, bottom: 20 }}
+              margin={{ top: 100, right: 30, left: 20, bottom: 20 }}
             >
               <CartesianGrid strokeDasharray="3 3" horizontal={false} />
               <XAxis
                 type="number"
                 allowDecimals={false}
-                domain={[0, "dataMax + 10"]}
+                domain={[0, "dataMax + 20"]}
                 label={{
                   value: "Days to Finish",
                   position: "insideBottom",
                   offset: -5,
                 }}
+              />
+              <XAxis
+                xAxisId="dateAxis"
+                orientation="top"
+                type="number"
+                dataKey="totalDays"
+                domain={[0, "dataMax + 20"]}
+                tickFormatter={formatDaysToDate}
+                stroke="#94a3b8"
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
               />
               <YAxis
                 type="category"
@@ -279,7 +302,7 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
                     fill={DEADLINE_COLORS[index % DEADLINE_COLORS.length]}
                     fontSize={12}
                     fontWeight="bold"
-                    dy={-(15 + (index % 3) * 20)}
+                    dy={-(45 + (index % 3) * 20)}
                   />
                 </ReferenceLine>
               ))}
