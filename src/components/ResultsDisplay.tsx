@@ -39,14 +39,21 @@ const COURSE_COLORS = [
   "#14b8a6",
 ];
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+// FIX: Define a local interface for Tooltip props to fix type errors where `payload` and `label` were not found on the imported `TooltipProps` type.
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: Array<{ name: string; value: number; color: string }>;
+  label?: string | number;
+}
+
+const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
-    const total = payload.reduce((sum, entry) => sum + entry.value, 0);
+    const total = payload.reduce((sum, entry) => sum + (entry.value || 0), 0);
     return (
       <div className="p-3 bg-white border border-slate-200 rounded-lg shadow-lg text-sm">
         <p className="font-bold mb-2">{`Slots/Week: ${label}`}</p>
         <ul className="list-none p-0">
-          {payload.map((entry: any, index: number) => (
+          {payload.map((entry, index) => (
             <li
               key={`item-${index}`}
               style={{ color: entry.color }}
@@ -54,7 +61,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
             >
               <span>{entry.name}:</span>
               <span className="font-semibold ml-4">
-                {formatNumber(entry.value, 1)} days
+                {formatNumber(entry.value || 0, 1)} days
               </span>
             </li>
           ))}
@@ -72,7 +79,6 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 export function ResultsDisplay({ results }: ResultsDisplayProps) {
   const {
     inputs,
-    totalSheets,
     daysTillDeadline,
     requiredSlotsPerWeek,
     totalFee,
@@ -108,7 +114,7 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
   };
 
   const chartData = timelineScenarios.slice(0, 10).map((scenario) => {
-    const scenarioData: { [key: string]: any } = {
+    const scenarioData: { [key: string]: number } = {
       slotsPerWeek: scenario.slotsPerWeek,
     };
     scenario.courseBreakdown.forEach((cb) => {
