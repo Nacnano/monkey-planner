@@ -14,7 +14,6 @@ import type { CalculationResults } from "../types";
 import {
   CheckCircle2,
   XCircle,
-  Target,
   Wallet,
   BarChart2,
   CalendarDays,

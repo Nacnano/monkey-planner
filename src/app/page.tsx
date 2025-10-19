@@ -1,11 +1,18 @@
 "use client";
 
-import React, { useState, useMemo, useCallback } from "react";
-import { BookOpen, Target, HelpCircle, AlertTriangle } from "lucide-react";
+import React, { useState, useCallback } from "react";
+import { BookOpen, Target, HelpCircle } from "lucide-react";
 import { InputForm } from "@/components/InputForm";
 import { ResultsDisplay } from "@/components/ResultsDisplay";
 import type { FormData, CalculationResults } from "@/types";
 import { calculatePlan } from "@/services/calculationService";
+
+const ASSUMPTIONS = [
+  "ชีท 1 ชุด = 1 slot = 2 ชั่วโมง",
+  "นักเรียนเรียนใน slot เท่านั้น",
+  "นักเรียนทำเสร็จแค่ 1 ชีท/slot",
+  "นักเรียนไม่ลา ไม่ขาดเรียน",
+];
 
 function App() {
   const [results, setResults] = useState<CalculationResults | null>(null);
@@ -18,13 +25,6 @@ function App() {
       setResults(null);
     }
   }, []);
-
-  const assumptions = [
-    "ชีท 1 ชุด = 1 slot = 2 ชั่วโมง",
-    "นักเรียนเรียนใน slot เท่านั้น",
-    "นักเรียนทำเสร็จแค่ 1 ชีท/slot",
-    "นักเรียนไม่ลา ไม่ขาดเรียน",
-  ];
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 p-4 sm:p-6 lg:p-8">
@@ -51,7 +51,7 @@ function App() {
                   ข้อสมมติฐาน (Assumptions)
                 </h3>
                 <ul className="space-y-3 text-gray-600">
-                  {assumptions.map((item, index) => (
+                  {ASSUMPTIONS.map((item, index) => (
                     <li key={index} className="flex items-start">
                       <span className="flex items-center justify-center h-6 w-6 rounded-full bg-amber-100 text-amber-600 font-bold text-sm mr-3 flex-shrink-0">
                         {index + 1}

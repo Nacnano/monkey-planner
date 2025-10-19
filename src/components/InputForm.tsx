@@ -4,7 +4,6 @@ import {
   PlusCircle,
   BarChart,
   DollarSign,
-  Send,
   CalendarCheck,
   AlertCircle,
 } from "lucide-react";
