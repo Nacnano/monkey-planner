@@ -9,7 +9,6 @@ import {
   Legend,
   ResponsiveContainer,
   ReferenceLine,
-  Label,
 } from "recharts";
 import type { CalculationResults } from "../types";
 import {
@@ -35,9 +34,8 @@ const formatDate = (dateString: string) => {
   const [year, month, day] = dateString.split("-").map(Number);
   const date = new Date(year, month - 1, day);
   return date.toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
+    day: "numeric",
+    month: "short",
   });
 };
 
@@ -96,6 +94,42 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
     );
   }
   return null;
+};
+
+// Custom Label component with an arrow for the deadline ReferenceLine
+const DeadlineLabelWithArrow = (props: any) => {
+  const { viewBox, value, dy, fill } = props;
+  if (!viewBox) return null;
+  const { x, y } = viewBox;
+
+  const textY = y + dy;
+  const lineStartY = textY + 5;
+  const lineEndY = y - 2;
+  const arrowSize = 4;
+
+  return (
+    <g>
+      <text
+        x={x}
+        y={textY}
+        dy={-4}
+        fill={fill}
+        fontSize={12}
+        fontWeight="bold"
+        textAnchor="middle"
+      >
+        {value}
+      </text>
+      <path
+        d={`M${x},${lineStartY} L${x},${lineEndY} M${x - arrowSize},${
+          lineEndY - arrowSize
+        } L${x},${lineEndY} L${x + arrowSize},${lineEndY - arrowSize}`}
+        stroke={fill}
+        fill="none"
+        strokeWidth={1.5}
+      />
+    </g>
+  );
 };
 
 export function ResultsDisplay({ results }: ResultsDisplayProps) {
@@ -293,18 +327,16 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
                   stroke={DEADLINE_COLORS[index % DEADLINE_COLORS.length]}
                   strokeDasharray="4 4"
                   strokeWidth={2}
-                >
-                  <Label
-                    value={`${deadline.examName} (${formatDate(
-                      deadline.date
-                    )})`}
-                    position="top"
-                    fill={DEADLINE_COLORS[index % DEADLINE_COLORS.length]}
-                    fontSize={12}
-                    fontWeight="bold"
-                    dy={-(45 + (index % 3) * 20)}
-                  />
-                </ReferenceLine>
+                  label={
+                    <DeadlineLabelWithArrow
+                      value={`${deadline.examName} (${formatDate(
+                        deadline.date
+                      )})`}
+                      dy={-(45 + (index % 3) * 20)}
+                      fill={DEADLINE_COLORS[index % DEADLINE_COLORS.length]}
+                    />
+                  }
+                />
               ))}
             </BarChart>
           </ResponsiveContainer>
