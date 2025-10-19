@@ -79,7 +79,6 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
 export function ResultsDisplay({ results }: ResultsDisplayProps) {
   const {
     inputs,
-    totalSheets,
     examDeadlines,
     requiredSlotsPerWeek,
     totalFee,
