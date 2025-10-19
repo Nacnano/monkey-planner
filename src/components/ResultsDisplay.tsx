@@ -9,6 +9,7 @@ import {
   Legend,
   ResponsiveContainer,
   ReferenceLine,
+  Label,
 } from "recharts";
 import type { CalculationResults } from "../types";
 import {
@@ -220,7 +221,7 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
             <BarChart
               layout="vertical"
               data={chartData}
-              margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+              margin={{ top: 70, right: 30, left: 20, bottom: 20 }}
             >
               <CartesianGrid strokeDasharray="3 3" horizontal={false} />
               <XAxis
@@ -266,16 +267,21 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
                 <ReferenceLine
                   key={deadline.examName}
                   x={deadline.daysRemaining}
-                  label={{
-                    value: `${deadline.examName} (${formatDate(
-                      deadline.date
-                    )})`,
-                    position: "top",
-                    fill: DEADLINE_COLORS[index % DEADLINE_COLORS.length],
-                  }}
                   stroke={DEADLINE_COLORS[index % DEADLINE_COLORS.length]}
                   strokeDasharray="4 4"
-                />
+                  strokeWidth={2}
+                >
+                  <Label
+                    value={`${deadline.examName} (${formatDate(
+                      deadline.date
+                    )})`}
+                    position="top"
+                    fill={DEADLINE_COLORS[index % DEADLINE_COLORS.length]}
+                    fontSize={12}
+                    fontWeight="bold"
+                    dy={-(15 + (index % 3) * 20)}
+                  />
+                </ReferenceLine>
               ))}
             </BarChart>
           </ResponsiveContainer>
