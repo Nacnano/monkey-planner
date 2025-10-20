@@ -26,6 +26,7 @@ export const calculatePlan = (data: FormData): CalculationResults => {
         (deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
       );
       return {
+        id: exam.id,
         examName: exam.name || "Unnamed Exam",
         date: exam.date,
         daysRemaining,
@@ -44,6 +45,7 @@ export const calculatePlan = (data: FormData): CalculationResults => {
       (deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
     );
     finalGoalDeadline = {
+      id: finalGoalExam.id,
       examName: finalGoalExam.name || "Final Goal",
       date: finalGoalExam.date,
       daysRemaining,

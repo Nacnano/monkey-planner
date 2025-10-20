@@ -32,6 +32,7 @@ export interface TimelineAnalysis {
 }
 
 export interface ExamDeadline {
+  id: string;
   examName: string;
   date: string;
   daysRemaining: number;

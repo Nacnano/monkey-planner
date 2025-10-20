@@ -101,10 +101,11 @@ interface DeadlineLabelProps {
   value: string;
   dy: number;
   fill: string;
+  isFinalGoal?: boolean;
 }
 
 const DeadlineLabelWithArrow = (props: DeadlineLabelProps) => {
-  const { viewBox, value, dy, fill } = props;
+  const { viewBox, value, dy, fill, isFinalGoal } = props;
   if (!viewBox || !viewBox.x || !viewBox.y) return null;
   const { x, y } = viewBox;
 
@@ -120,11 +121,11 @@ const DeadlineLabelWithArrow = (props: DeadlineLabelProps) => {
         y={textY}
         dy={-4}
         fill={fill}
-        fontSize={12}
-        fontWeight="bold"
+        fontSize={isFinalGoal ? 14 : 12}
+        fontWeight={isFinalGoal ? "extrabold" : "bold"}
         textAnchor="middle"
       >
-        {value}
+        {isFinalGoal ? `⭐ ${value}` : value}
       </text>
       <path
         d={`M${x},${lineStartY} L${x},${lineEndY} M${x - arrowSize},${
@@ -132,7 +133,7 @@ const DeadlineLabelWithArrow = (props: DeadlineLabelProps) => {
         } L${x},${lineEndY} L${x + arrowSize},${lineEndY - arrowSize}`}
         stroke={fill}
         fill="none"
-        strokeWidth={1.5}
+        strokeWidth={isFinalGoal ? 2 : 1.5}
       />
     </g>
   );
@@ -396,24 +397,32 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
                 />
               ))}
 
-              {examDeadlines.map((deadline, index) => (
-                <ReferenceLine
-                  key={deadline.examName}
-                  x={deadline.daysRemaining}
-                  stroke={DEADLINE_COLORS[index % DEADLINE_COLORS.length]}
-                  strokeDasharray="4 4"
-                  strokeWidth={2}
-                  label={
-                    <DeadlineLabelWithArrow
-                      value={`${deadline.examName} (${formatDate(
-                        deadline.date
-                      )})`}
-                      dy={-(45 + (index % 3) * 25)}
-                      fill={DEADLINE_COLORS[index % DEADLINE_COLORS.length]}
-                    />
-                  }
-                />
-              ))}
+              {examDeadlines.map((deadline, index) => {
+                const isFinalGoal = deadline.id === inputs.finalGoalExamId;
+                const color = isFinalGoal
+                  ? "#f59e0b" // A standout amber/gold color for the final goal
+                  : DEADLINE_COLORS[index % DEADLINE_COLORS.length];
+
+                return (
+                  <ReferenceLine
+                    key={deadline.examName}
+                    x={deadline.daysRemaining}
+                    stroke={color}
+                    strokeDasharray={isFinalGoal ? "3 3" : "4 4"}
+                    strokeWidth={isFinalGoal ? 3 : 2}
+                    label={
+                      <DeadlineLabelWithArrow
+                        value={`${deadline.examName} (${formatDate(
+                          deadline.date
+                        )})`}
+                        dy={-(45 + (index % 3) * 25)}
+                        fill={color}
+                        isFinalGoal={isFinalGoal}
+                      />
+                    }
+                  />
+                );
+              })}
             </BarChart>
           </ResponsiveContainer>
         </div>
