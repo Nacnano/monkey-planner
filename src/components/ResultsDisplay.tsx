@@ -159,17 +159,28 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
   const summary = {
     isSuccess: isFeasible,
     title: isFeasible
-      ? `Your Plan for '${finalGoalName}'`
-      : `Plan Adjustment Needed for '${finalGoalName}'`,
-    message: isFeasible
-      ? `To meet your goal, the recommended plan is ${recommendedSlots} slots per week. This ensures you finish on time.`
-      : `The deadline for '${finalGoalName}' is not feasible with the current workload. Please adjust the courses or deadline.`,
+      ? `On Track for '${finalGoalName}'!`
+      : `Goal '${finalGoalName}' is At Risk`,
+    message: isFeasible ? (
+      <>
+        Your recommended plan of{" "}
+        <strong className="font-bold">{recommendedSlots} slots/week</strong>{" "}
+        puts you on a clear path to success.
+      </>
+    ) : (
+      <>
+        The current workload is too high for the deadline.{" "}
+        <strong className="font-bold">
+          Try reducing sheets or extending the deadline.
+        </strong>
+      </>
+    ),
   };
 
   const recommendation = {
     slots: recommendedSlots,
     message: isFeasible
-      ? `To meet the '${finalGoalName}' deadline, a minimum of ${recommendedSlots} slots/week is recommended.`
+      ? `This is the optimal pace to finish all coursework right on time for the '${finalGoalName}' deadline.`
       : `The deadline for '${finalGoalName}' is not feasible.`,
   };
 
@@ -277,7 +288,7 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
               </p>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">Fee/Month (Rec.)</span>
+              <span className="text-gray-600">Est. Monthly Cost</span>
               <p className="text-lg font-bold text-gray-800">
                 ฿{formatNumber(recommendedPlan.monthlyFee)}
               </p>
@@ -305,7 +316,12 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
                 key={deadline.examName}
                 className="flex justify-between items-center text-gray-600"
               >
-                <span>{deadline.examName}</span>
+                <span className="flex items-center">
+                  {deadline.id === inputs.finalGoalExamId && (
+                    <span className="mr-2">⭐</span>
+                  )}
+                  {deadline.examName}
+                </span>
                 <span className="font-bold text-amber-700 bg-amber-100 px-2.5 py-1 rounded-full text-sm">
                   {formatNumber(deadline.daysRemaining)} days
                 </span>
@@ -431,7 +447,7 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
       <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200">
         <h3 className="flex items-center text-xl font-bold text-gray-800 mb-4">
           <CalendarDays className="h-6 w-6 mr-3 text-indigo-500" />
-          Timeline Scenarios
+          Plan Scenarios & Breakdown
         </h3>
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-left text-gray-500">
@@ -444,7 +460,7 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
                   Total Days to Finish
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Deadlines Met?
+                  Meets Final Goal?
                 </th>
                 <th scope="col" className="px-6 py-3 rounded-r-lg">
                   Fee / Month

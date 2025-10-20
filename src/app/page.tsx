@@ -37,7 +37,8 @@ function App() {
             </h1>
           </div>
           <p className="mt-3 text-lg text-gray-600 max-w-2xl mx-auto">
-            วางแผนการเรียนและประเมินค่าใช้จ่ายสู่เป้าหมายของนักเรียน
+            Instantly calculate your study plan to ensure you reach your goals
+            on time and on budget.
           </p>
         </header>
 
@@ -75,7 +76,8 @@ function App() {
                     Your Plan Awaits
                   </h2>
                   <p className="mt-2 text-gray-500 max-w-sm mx-auto">
-                    กรอกข้อมูลด้านซ้ายเพื่อเริ่มการคำนวณและวางแผนการเรียน
+                    Fill in your courses and deadlines on the left to see your
+                    personalized study plan.
                   </p>
                 </div>
               </div>
