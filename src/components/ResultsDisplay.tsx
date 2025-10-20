@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from "recharts";
-import type { CalculationResults } from "../types";
+import type { CalculationResults, TimelineAnalysis } from "../types";
 import {
   CheckCircle2,
   XCircle,
@@ -162,19 +162,35 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
       : `The current plan of ${inputs.preferredSlots} slots/week is not on track to meet the '${finalGoalName}' deadline. See our recommendation below.`,
   };
 
+  const recommendedSlots = Math.ceil(requiredSlotsPerWeek);
   const recommendation = {
-    slots: Math.ceil(requiredSlotsPerWeek),
+    slots: recommendedSlots,
     message:
       isFinite(requiredSlotsPerWeek) && requiredSlotsPerWeek > 0
-        ? `To meet the '${finalGoalName}' deadline, a minimum of ${Math.ceil(
-            requiredSlotsPerWeek
-          )} slots/week is recommended.`
+        ? `To meet the '${finalGoalName}' deadline, a minimum of ${recommendedSlots} slots/week is recommended.`
         : finalGoalName
         ? `The deadline for '${finalGoalName}' is not feasible with the current workload. Please adjust.`
         : "Please select a Final Goal to see a recommendation.",
   };
 
-  const chartData = timelineScenarios.slice(0, 10).map((scenario) => {
+  // --- Dynamic Chart Data Calculation ---
+  const preferredSlots = inputs.preferredSlots;
+  const focusPoints = [
+    preferredSlots,
+    isFinite(recommendedSlots) ? recommendedSlots : preferredSlots,
+  ];
+  const minFocus = Math.min(...focusPoints);
+  const maxFocus = Math.max(...focusPoints);
+
+  const range = 5;
+  const minSlot = Math.max(1, minFocus - range);
+  const maxSlot = maxFocus + range;
+
+  const visibleScenarios = timelineScenarios.filter(
+    (s) => s.slotsPerWeek >= minSlot && s.slotsPerWeek <= maxSlot
+  );
+
+  const chartData = visibleScenarios.map((scenario) => {
     const scenarioData: { [key: string]: number | string } = {
       slotsPerWeek: scenario.slotsPerWeek,
       totalDays: scenario.daysToFinish,
@@ -186,6 +202,23 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
   });
 
   const courses = results.inputs.courses;
+  const maxDeadlineDays = Math.max(
+    0,
+    ...examDeadlines.map((d) => d.daysRemaining)
+  );
+
+  const getRowClass = (scenario: TimelineAnalysis, index: number): string => {
+    const isPreferred = scenario.slotsPerWeek === inputs.preferredSlots;
+    const isRecommended = scenario.slotsPerWeek === recommendedSlots;
+
+    if (isPreferred) {
+      return "!bg-sky-100 font-bold text-sky-800";
+    }
+    if (isRecommended) {
+      return "bg-slate-100 font-medium text-slate-700";
+    }
+    return index % 2 === 0 ? "bg-white" : "bg-gray-50";
+  };
 
   return (
     <div className="space-y-8 animate-fade-in">
@@ -312,7 +345,11 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
               <XAxis
                 type="number"
                 allowDecimals={false}
-                domain={[0, "dataMax + 20"]}
+                domain={[
+                  0,
+                  (dataMax: number) =>
+                    Math.ceil(Math.max(dataMax || 0, maxDeadlineDays) * 1.1),
+                ]}
                 label={{
                   value: "Days to Finish",
                   position: "insideBottom",
@@ -327,7 +364,11 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
                 orientation="top"
                 type="number"
                 dataKey="totalDays"
-                domain={[0, "dataMax + 20"]}
+                domain={[
+                  0,
+                  (dataMax: number) =>
+                    Math.ceil(Math.max(dataMax || 0, maxDeadlineDays) * 1.1),
+                ]}
                 tickFormatter={formatDaysToDate}
                 stroke="#94a3b8"
                 fontSize={12}
@@ -416,13 +457,10 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
               {timelineScenarios.map((s, index) => (
                 <tr
                   key={s.slotsPerWeek}
-                  className={`border-b border-gray-100 ${
-                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                  } ${
-                    s.slotsPerWeek === inputs.preferredSlots
-                      ? "!bg-sky-100 font-bold text-sky-800"
-                      : ""
-                  }`}
+                  className={`border-b border-gray-100 transition-colors ${getRowClass(
+                    s,
+                    index
+                  )}`}
                 >
                   <th scope="row" className="px-6 py-4 whitespace-nowrap">
                     {s.slotsPerWeek}

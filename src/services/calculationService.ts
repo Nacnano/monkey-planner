@@ -21,8 +21,7 @@ export const calculatePlan = (data: FormData): CalculationResults => {
   const examDeadlines: ExamDeadline[] = exams
     .filter((exam) => exam.date)
     .map((exam) => {
-      const deadlineDate = new Date(exam.date);
-      deadlineDate.setHours(0, 0, 0, 0);
+      const deadlineDate = new Date(exam.date + "T00:00:00");
       const daysRemaining = Math.max(
         0,
         (deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
@@ -40,8 +39,7 @@ export const calculatePlan = (data: FormData): CalculationResults => {
   const finalGoalExam = exams.find((exam) => exam.id === finalGoalExamId);
   let finalGoalDeadline: ExamDeadline | null = null;
   if (finalGoalExam && finalGoalExam.date) {
-    const deadlineDate = new Date(finalGoalExam.date);
-    deadlineDate.setHours(0, 0, 0, 0);
+    const deadlineDate = new Date(finalGoalExam.date + "T00:00:00");
     const daysRemaining = Math.max(
       0,
       (deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
@@ -100,8 +98,8 @@ export const calculatePlan = (data: FormData): CalculationResults => {
   const timelineScenarios: TimelineAnalysis[] = [];
   const maxSlotsToDisplay = Math.max(
     10,
-    Math.ceil(requiredSlotsPerWeek) + 2,
-    preferredSlots + 2
+    Math.ceil(requiredSlotsPerWeek) + 5,
+    preferredSlots + 5
   );
 
   for (let i = 1; i <= maxSlotsToDisplay; i++) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import type { Course, Exam, FormData } from "../types";
 import {
   PlusCircle,
@@ -17,6 +17,10 @@ interface InputFormProps {
 const createDueDate = (monthsToAdd: number) => {
   const date = new Date();
   date.setMonth(date.getMonth() + monthsToAdd);
+  // Adjust for end of month issues
+  if (date.getDate() < new Date().getDate()) {
+    date.setDate(0);
+  }
   return date.toISOString().split("T")[0];
 };
 
@@ -47,6 +51,9 @@ export function InputForm({ onCalculate }: InputFormProps) {
   );
   const [errors, setErrors] = useState<string[]>([]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const stableOnCalculate = useCallback(onCalculate, []);
+
   useEffect(() => {
     const validationErrors: string[] = [];
     if (!pricePerSlot || pricePerSlot <= 0)
@@ -75,23 +82,23 @@ export function InputForm({ onCalculate }: InputFormProps) {
     setErrors(validationErrors);
 
     if (validationErrors.length === 0) {
-      onCalculate({
+      stableOnCalculate({
         preferredSlots,
         courses,
         exams,
         pricePerSlot,
         finalGoalExamId,
       });
-    } else {
-      onCalculate(null);
     }
+    // If there are errors, we NO LONGER call onCalculate(null).
+    // This keeps the last valid result visible for a better UX.
   }, [
     preferredSlots,
     pricePerSlot,
     courses,
     exams,
     finalGoalExamId,
-    onCalculate,
+    stableOnCalculate,
   ]);
 
   const addCourse = () => {
@@ -114,7 +121,11 @@ export function InputForm({ onCalculate }: InputFormProps) {
   };
 
   const addExam = () => {
-    const newExam = { id: crypto.randomUUID(), name: "", date: "" };
+    const newExam = {
+      id: crypto.randomUUID(),
+      name: "",
+      date: createDueDate(1),
+    };
     setExams([...exams, newExam]);
     if (exams.length === 0) {
       setFinalGoalExamId(newExam.id);
