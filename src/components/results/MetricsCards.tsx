@@ -1,5 +1,5 @@
 import React from "react";
-import { Award, Wallet, Clock } from "lucide-react";
+import { Award, Wallet } from "lucide-react";
 import type { CalculationResults } from "../../types";
 
 interface MetricsCardsProps {
@@ -18,8 +18,7 @@ export function MetricsCards({
   isFeasible,
   recommendedSlots,
 }: MetricsCardsProps) {
-  const { inputs, totalSheets, examDeadlines, totalFee, recommendedPlan } =
-    results;
+  const { inputs, totalSheets, totalFee, recommendedPlan } = results;
   const finalGoalName =
     inputs.exams.find((e) => e.id === inputs.finalGoalExamId)?.name ||
     "the final goal";
@@ -32,7 +31,7 @@ export function MetricsCards({
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* Recommendation Card */}
       <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200 flex flex-col">
         <div className="flex items-center mb-4">
@@ -77,36 +76,6 @@ export function MetricsCards({
               ฿{formatNumber(totalFee)}
             </p>
           </div>
-        </div>
-      </div>
-
-      {/* Deadline Countdown Card */}
-      <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200">
-        <div className="flex items-center mb-4">
-          <div className="p-3 bg-amber-100 rounded-full mr-4">
-            <Clock className="h-6 w-6 text-amber-600" />
-          </div>
-          <h3 className="text-lg font-bold text-gray-800">
-            Deadline Countdown
-          </h3>
-        </div>
-        <div className="space-y-3">
-          {examDeadlines.map((deadline) => (
-            <div
-              key={deadline.examName}
-              className="flex justify-between items-center text-gray-600"
-            >
-              <span className="flex items-center">
-                {deadline.id === inputs.finalGoalExamId && (
-                  <span className="mr-2">⭐</span>
-                )}
-                {deadline.examName}
-              </span>
-              <span className="font-bold text-amber-700 bg-amber-100 px-2.5 py-1 rounded-full text-sm">
-                {formatNumber(deadline.daysRemaining)} days
-              </span>
-            </div>
-          ))}
         </div>
       </div>
     </div>
