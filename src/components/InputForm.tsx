@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import type { Course, Exam, FormData } from "../types";
 import {
   PlusCircle,
-  BarChart,
   DollarSign,
   CalendarCheck,
   AlertCircle,
