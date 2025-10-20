@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -19,6 +19,7 @@ import {
   CalendarDays,
   Clock,
   Award,
+  SlidersHorizontal,
 } from "lucide-react";
 
 interface ResultsDisplayProps {
@@ -156,6 +157,22 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
   const isFeasible = isFinite(requiredSlotsPerWeek) && requiredSlotsPerWeek > 0;
   const recommendedSlots = isFeasible ? Math.ceil(requiredSlotsPerWeek) : 0;
 
+  const [minSlotRange, setMinSlotRange] = useState(1);
+  const [maxSlotRange, setMaxSlotRange] = useState(10);
+
+  useEffect(() => {
+    const focusPoints = [isFeasible ? recommendedSlots : 1];
+    const minFocus = Math.min(...focusPoints);
+    const maxFocus = Math.max(...focusPoints);
+
+    const range = 5;
+    const defaultMin = Math.max(1, minFocus - range);
+    const defaultMax = maxFocus + range;
+
+    setMinSlotRange(defaultMin);
+    setMaxSlotRange(defaultMax);
+  }, [results, recommendedSlots, isFeasible]);
+
   const summary = {
     isSuccess: isFeasible,
     title: isFeasible
@@ -184,17 +201,8 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
       : `The deadline for '${finalGoalName}' is not feasible.`,
   };
 
-  // --- Dynamic Chart Data Calculation ---
-  const focusPoints = [isFeasible ? recommendedSlots : 1];
-  const minFocus = Math.min(...focusPoints);
-  const maxFocus = Math.max(...focusPoints);
-
-  const range = 5;
-  const minSlot = Math.max(1, minFocus - range);
-  const maxSlot = maxFocus + range;
-
   const visibleScenarios = timelineScenarios.filter(
-    (s) => s.slotsPerWeek >= minSlot && s.slotsPerWeek <= maxSlot
+    (s) => s.slotsPerWeek >= minSlotRange && s.slotsPerWeek <= maxSlotRange
   );
 
   const chartData = visibleScenarios.map((scenario) => {
@@ -332,10 +340,38 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
       </div>
 
       <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200">
-        <h3 className="flex items-center text-xl font-bold text-gray-800 mb-4">
-          <BarChart2 className="h-6 w-6 mr-3 text-violet-500" />
-          Timeline Visualization
-        </h3>
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+          <h3 className="flex items-center text-xl font-bold text-gray-800">
+            <BarChart2 className="h-6 w-6 mr-3 text-violet-500" />
+            Timeline Visualization
+          </h3>
+          <div className="flex items-center gap-2 sm:gap-4 text-sm">
+            <label htmlFor="minSlots" className="font-medium text-gray-600">
+              Slot Range:
+            </label>
+            <input
+              type="number"
+              id="minSlots"
+              value={minSlotRange}
+              onChange={(e) =>
+                setMinSlotRange(Math.max(1, Number(e.target.value)))
+              }
+              min="1"
+              className="w-16 p-1 text-center bg-gray-100 border border-gray-300 rounded-md focus:ring-sky-500 focus:border-sky-500"
+              aria-label="Minimum slots per week"
+            />
+            <span className="text-gray-400">-</span>
+            <input
+              type="number"
+              id="maxSlots"
+              value={maxSlotRange}
+              onChange={(e) => setMaxSlotRange(Number(e.target.value))}
+              min={minSlotRange + 1}
+              className="w-16 p-1 text-center bg-gray-100 border border-gray-300 rounded-md focus:ring-sky-500 focus:border-sky-500"
+              aria-label="Maximum slots per week"
+            />
+          </div>
+        </div>
         <div className="w-full h-96">
           <ResponsiveContainer>
             <BarChart
