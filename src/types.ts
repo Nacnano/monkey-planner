@@ -11,7 +11,6 @@ export interface Exam {
 }
 
 export interface FormData {
-  preferredSlots: number;
   courses: Course[];
   exams: Exam[];
   pricePerSlot: number;
@@ -44,6 +43,6 @@ export interface CalculationResults {
   examDeadlines: ExamDeadline[];
   requiredSlotsPerWeek: number;
   totalFee: number;
-  preferredPlan: TimelineAnalysis;
+  recommendedPlan: TimelineAnalysis;
   timelineScenarios: TimelineAnalysis[];
 }

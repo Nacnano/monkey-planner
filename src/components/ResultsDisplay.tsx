@@ -145,40 +145,35 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
     examDeadlines,
     requiredSlotsPerWeek,
     totalFee,
-    preferredPlan,
+    recommendedPlan,
     timelineScenarios,
   } = results;
   const finalGoalName =
     inputs.exams.find((e) => e.id === inputs.finalGoalExamId)?.name ||
     "the final goal";
 
+  const isFeasible = isFinite(requiredSlotsPerWeek) && requiredSlotsPerWeek > 0;
+  const recommendedSlots = isFeasible ? Math.ceil(requiredSlotsPerWeek) : 0;
+
   const summary = {
-    isSuccess: preferredPlan.isSuccess,
-    title: preferredPlan.isSuccess
-      ? `On Track for '${finalGoalName}'!`
-      : `Needs Adjustment for '${finalGoalName}'`,
-    message: preferredPlan.isSuccess
-      ? `Based on your plan of ${inputs.preferredSlots} slots/week, you are on track to meet the '${finalGoalName}' deadline.`
-      : `The current plan of ${inputs.preferredSlots} slots/week is not on track to meet the '${finalGoalName}' deadline. See our recommendation below.`,
+    isSuccess: isFeasible,
+    title: isFeasible
+      ? `Your Plan for '${finalGoalName}'`
+      : `Plan Adjustment Needed for '${finalGoalName}'`,
+    message: isFeasible
+      ? `To meet your goal, the recommended plan is ${recommendedSlots} slots per week. This ensures you finish on time.`
+      : `The deadline for '${finalGoalName}' is not feasible with the current workload. Please adjust the courses or deadline.`,
   };
 
-  const recommendedSlots = Math.ceil(requiredSlotsPerWeek);
   const recommendation = {
     slots: recommendedSlots,
-    message:
-      isFinite(requiredSlotsPerWeek) && requiredSlotsPerWeek > 0
-        ? `To meet the '${finalGoalName}' deadline, a minimum of ${recommendedSlots} slots/week is recommended.`
-        : finalGoalName
-        ? `The deadline for '${finalGoalName}' is not feasible with the current workload. Please adjust.`
-        : "Please select a Final Goal to see a recommendation.",
+    message: isFeasible
+      ? `To meet the '${finalGoalName}' deadline, a minimum of ${recommendedSlots} slots/week is recommended.`
+      : `The deadline for '${finalGoalName}' is not feasible.`,
   };
 
   // --- Dynamic Chart Data Calculation ---
-  const preferredSlots = inputs.preferredSlots;
-  const focusPoints = [
-    preferredSlots,
-    isFinite(recommendedSlots) ? recommendedSlots : preferredSlots,
-  ];
+  const focusPoints = [isFeasible ? recommendedSlots : 1];
   const minFocus = Math.min(...focusPoints);
   const maxFocus = Math.max(...focusPoints);
 
@@ -208,14 +203,10 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
   );
 
   const getRowClass = (scenario: TimelineAnalysis, index: number): string => {
-    const isPreferred = scenario.slotsPerWeek === inputs.preferredSlots;
     const isRecommended = scenario.slotsPerWeek === recommendedSlots;
 
-    if (isPreferred) {
-      return "!bg-sky-100 font-bold text-sky-800";
-    }
     if (isRecommended) {
-      return "bg-slate-100 font-medium text-slate-700";
+      return "!bg-sky-100 font-bold text-sky-800";
     }
     return index % 2 === 0 ? "bg-white" : "bg-gray-50";
   };
@@ -263,9 +254,7 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
             <h3 className="text-lg font-bold text-gray-800">Recommendation</h3>
           </div>
           <p className="text-5xl font-extrabold text-sky-600">
-            {isFinite(recommendation.slots) && recommendation.slots > 0
-              ? recommendation.slots
-              : "N/A"}
+            {isFeasible ? recommendation.slots : "N/A"}
           </p>
           <p className="text-lg font-medium text-gray-500 -mt-1">Slots/Week</p>
           <p className="mt-4 text-gray-600 text-sm flex-grow">
@@ -287,9 +276,9 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
               </p>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">Fee/Month (Plan)</span>
+              <span className="text-gray-600">Fee/Month (Rec.)</span>
               <p className="text-lg font-bold text-gray-800">
-                ฿{formatNumber(preferredPlan.monthlyFee)}
+                ฿{formatNumber(recommendedPlan.monthlyFee)}
               </p>
             </div>
             <div className="flex justify-between items-center border-t pt-3 mt-3">

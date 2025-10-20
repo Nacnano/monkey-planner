@@ -41,7 +41,6 @@ const initialCourses: Course[] = [
 ];
 
 export function InputForm({ onCalculate }: InputFormProps) {
-  const [preferredSlots, setPreferredSlots] = useState(2);
   const [pricePerSlot, setPricePerSlot] = useState(500);
 
   const [courses, setCourses] = useState<Course[]>(initialCourses);
@@ -58,8 +57,6 @@ export function InputForm({ onCalculate }: InputFormProps) {
     const validationErrors: string[] = [];
     if (!pricePerSlot || pricePerSlot <= 0)
       validationErrors.push("Price/Slot must be greater than 0.");
-    if (!preferredSlots || preferredSlots <= 0)
-      validationErrors.push("Slots/Week must be greater than 0.");
     courses.forEach((c, i) => {
       if (!c.name.trim())
         validationErrors.push(`Course #${i + 1} needs a name.`);
@@ -83,7 +80,6 @@ export function InputForm({ onCalculate }: InputFormProps) {
 
     if (validationErrors.length === 0) {
       stableOnCalculate({
-        preferredSlots,
         courses,
         exams,
         pricePerSlot,
@@ -92,14 +88,7 @@ export function InputForm({ onCalculate }: InputFormProps) {
     }
     // If there are errors, we NO LONGER call onCalculate(null).
     // This keeps the last valid result visible for a better UX.
-  }, [
-    preferredSlots,
-    pricePerSlot,
-    courses,
-    exams,
-    finalGoalExamId,
-    stableOnCalculate,
-  ]);
+  }, [pricePerSlot, courses, exams, finalGoalExamId, stableOnCalculate]);
 
   const addCourse = () => {
     setCourses([
@@ -157,43 +146,23 @@ export function InputForm({ onCalculate }: InputFormProps) {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label
-            htmlFor="slots"
-            className="flex items-center text-sm font-medium text-gray-700 mb-1"
-          >
-            <BarChart className="h-4 w-4 mr-2 text-gray-400" />
-            Slots/Week*
-          </label>
-          <input
-            type="number"
-            id="slots"
-            value={preferredSlots}
-            onChange={(e) => setPreferredSlots(Number(e.target.value))}
-            min="1"
-            required
-            className="w-full p-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-sky-500 focus:border-sky-500"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="price"
-            className="flex items-center text-sm font-medium text-gray-700 mb-1"
-          >
-            <DollarSign className="h-4 w-4 mr-2 text-gray-400" />
-            Price/Slot*
-          </label>
-          <input
-            type="number"
-            id="price"
-            value={pricePerSlot}
-            onChange={(e) => setPricePerSlot(Number(e.target.value))}
-            min="0"
-            required
-            className="w-full p-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-sky-500 focus:border-sky-500"
-          />
-        </div>
+      <div>
+        <label
+          htmlFor="price"
+          className="flex items-center text-sm font-medium text-gray-700 mb-1"
+        >
+          <DollarSign className="h-4 w-4 mr-2 text-gray-400" />
+          Price/Slot*
+        </label>
+        <input
+          type="number"
+          id="price"
+          value={pricePerSlot}
+          onChange={(e) => setPricePerSlot(Number(e.target.value))}
+          min="0"
+          required
+          className="w-full p-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-sky-500 focus:border-sky-500"
+        />
       </div>
 
       <div className="border-t border-gray-200 !mt-8"></div>

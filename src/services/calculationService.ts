@@ -7,8 +7,7 @@ import type {
 } from "../types";
 
 export const calculatePlan = (data: FormData): CalculationResults => {
-  const { courses, exams, preferredSlots, pricePerSlot, finalGoalExamId } =
-    data;
+  const { courses, exams, pricePerSlot, finalGoalExamId } = data;
 
   const totalSheets = courses.reduce(
     (sum, course) => sum + (course.sheetCount || 0),
@@ -93,14 +92,14 @@ export const calculatePlan = (data: FormData): CalculationResults => {
     };
   };
 
-  const preferredPlan = calculateScenario(preferredSlots);
+  const recommendedSlots =
+    isFinite(requiredSlotsPerWeek) && requiredSlotsPerWeek > 0
+      ? Math.ceil(requiredSlotsPerWeek)
+      : 1;
+  const recommendedPlan = calculateScenario(recommendedSlots);
 
   const timelineScenarios: TimelineAnalysis[] = [];
-  const maxSlotsToDisplay = Math.max(
-    10,
-    Math.ceil(requiredSlotsPerWeek) + 5,
-    preferredSlots + 5
-  );
+  const maxSlotsToDisplay = Math.max(10, Math.ceil(requiredSlotsPerWeek) + 5);
 
   for (let i = 1; i <= maxSlotsToDisplay; i++) {
     timelineScenarios.push(calculateScenario(i));
@@ -112,7 +111,7 @@ export const calculatePlan = (data: FormData): CalculationResults => {
     examDeadlines,
     requiredSlotsPerWeek,
     totalFee,
-    preferredPlan,
+    recommendedPlan,
     timelineScenarios,
   };
 };
