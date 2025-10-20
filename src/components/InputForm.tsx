@@ -49,6 +49,7 @@ export function InputForm({ onCalculate }: InputFormProps) {
     initialExams.length > 0 ? initialExams[initialExams.length - 1].id : null
   );
   const [errors, setErrors] = useState<string[]>([]);
+  const [draggedCourseId, setDraggedCourseId] = useState<string | null>(null);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const stableOnCalculate = useCallback(onCalculate, []);
@@ -137,6 +138,36 @@ export function InputForm({ onCalculate }: InputFormProps) {
     );
   };
 
+  const handleDragStart = (id: string) => {
+    setDraggedCourseId(id);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedCourseId(null);
+  };
+
+  const handleDrop = (targetId: string) => {
+    if (!draggedCourseId || draggedCourseId === targetId) {
+      setDraggedCourseId(null);
+      return;
+    }
+
+    const draggedIndex = courses.findIndex((c) => c.id === draggedCourseId);
+    const targetIndex = courses.findIndex((c) => c.id === targetId);
+
+    if (draggedIndex === -1 || targetIndex === -1) {
+      setDraggedCourseId(null);
+      return;
+    }
+
+    const newCourses = [...courses];
+    const [draggedItem] = newCourses.splice(draggedIndex, 1);
+    newCourses.splice(targetIndex, 0, draggedItem);
+
+    setCourses(newCourses);
+    setDraggedCourseId(null);
+  };
+
   return (
     <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200 space-y-6">
       <div className="space-y-1">
@@ -182,6 +213,10 @@ export function InputForm({ onCalculate }: InputFormProps) {
             course={course}
             onUpdate={updateCourse}
             onRemove={removeCourse}
+            isDragging={draggedCourseId === course.id}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            onDrop={handleDrop}
           />
         ))}
       </div>
