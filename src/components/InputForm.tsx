@@ -5,26 +5,11 @@ import { CourseList } from "./input/CourseList";
 import { ExamList } from "./input/ExamList";
 import { ValidationErrorDisplay } from "./input/ValidationErrorDisplay";
 import { createDueDate } from "../utils/dateUtils";
+import { initialCourses, initialExams } from "../data/initialData";
 
 interface InputFormProps {
   onCalculate: (data: FormData | null) => void;
 }
-
-const initialExams: Exam[] = [
-  { id: crypto.randomUUID(), name: "Midterm Exam", date: createDueDate(5) },
-  { id: crypto.randomUUID(), name: "Final Exam", date: createDueDate(9) },
-  {
-    id: crypto.randomUUID(),
-    name: "University Entrance Exam",
-    date: createDueDate(12),
-  },
-];
-
-const initialCourses: Course[] = [
-  { id: crypto.randomUUID(), name: "ปรับพื้นฐาน ม.ปลาย", sheetCount: 20 },
-  { id: crypto.randomUUID(), name: "เนื้อหาฟิสิกส์ ม.5", sheetCount: 45 },
-  { id: crypto.randomUUID(), name: "ตะลุยโจทย์ PAT3", sheetCount: 60 },
-];
 
 export function InputForm({ onCalculate }: InputFormProps) {
   const [pricePerSlot, setPricePerSlot] = useState(500);
