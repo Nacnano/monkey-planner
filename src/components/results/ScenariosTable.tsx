@@ -1,11 +1,7 @@
 import React from "react";
 import type { TimelineAnalysis } from "../../types";
 import { CalendarDays } from "lucide-react";
-
-const formatNumber = (num: number, digits = 0) =>
-  new Intl.NumberFormat("en-US", {
-    maximumFractionDigits: digits,
-  }).format(num);
+import { formatNumber } from "../../utils/formatters";
 
 interface ScenariosTableProps {
   timelineScenarios: TimelineAnalysis[];

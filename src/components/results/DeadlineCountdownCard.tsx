@@ -1,25 +1,11 @@
 import React from "react";
 import { Clock } from "lucide-react";
 import type { CalculationResults } from "../../types";
+import { formatNumber, formatDate } from "../../utils/formatters";
 
 interface DeadlineCountdownCardProps {
   results: CalculationResults;
 }
-
-const formatNumber = (num: number, digits = 0) =>
-  new Intl.NumberFormat("en-US", {
-    maximumFractionDigits: digits,
-  }).format(num);
-
-const formatDate = (dateString: string) => {
-  if (!dateString || !dateString.includes("-")) return "";
-  const date = new Date(dateString + "T00:00:00");
-  return date.toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-};
 
 export function DeadlineCountdownCard({ results }: DeadlineCountdownCardProps) {
   const { inputs, examDeadlines } = results;
@@ -48,7 +34,11 @@ export function DeadlineCountdownCard({ results }: DeadlineCountdownCardProps) {
                 )}
               </p>
               <p className="text-xs text-gray-500">
-                {formatDate(deadline.date)}
+                {formatDate(deadline.date, {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
               </p>
             </div>
             <div className="text-right flex-shrink-0 ml-4">

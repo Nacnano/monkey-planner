@@ -4,19 +4,11 @@ import { PricingInput } from "./input/PricingInput";
 import { CourseList } from "./input/CourseList";
 import { ExamList } from "./input/ExamList";
 import { ValidationErrorDisplay } from "./input/ValidationErrorDisplay";
+import { createDueDate } from "../utils/dateUtils";
 
 interface InputFormProps {
   onCalculate: (data: FormData | null) => void;
 }
-
-const createDueDate = (monthsToAdd: number) => {
-  const date = new Date();
-  date.setMonth(date.getMonth() + monthsToAdd);
-  if (date.getDate() < new Date().getDate()) {
-    date.setDate(0);
-  }
-  return date.toISOString().split("T")[0];
-};
 
 const initialExams: Exam[] = [
   { id: crypto.randomUUID(), name: "Midterm Exam", date: createDueDate(5) },

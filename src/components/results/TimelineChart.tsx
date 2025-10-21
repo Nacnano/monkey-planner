@@ -12,30 +12,11 @@ import {
 } from "recharts";
 import type { CalculationResults } from "../../types";
 import { BarChart2 } from "lucide-react";
-
-const formatNumber = (num: number, digits = 0) =>
-  new Intl.NumberFormat("en-US", {
-    maximumFractionDigits: digits,
-  }).format(num);
-
-const formatDate = (dateString: string) => {
-  if (!dateString || !dateString.includes("-")) return "";
-  const date = new Date(dateString + "T00:00:00");
-  return date.toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "short",
-  });
-};
-
-const formatDaysToDate = (days: number): string => {
-  if (typeof days !== "number" || !isFinite(days) || days < 0) return "";
-  const futureDate = new Date();
-  futureDate.setDate(futureDate.getDate() + days);
-  return futureDate.toLocaleDateString("en-GB", {
-    month: "short",
-    year: "numeric",
-  });
-};
+import {
+  formatNumber,
+  formatDate,
+  formatDaysToDate,
+} from "../../utils/formatters";
 
 const COURSE_COLORS = [
   "#0ea5e9",
@@ -302,7 +283,8 @@ export function TimelineChart({
                   label={
                     <DeadlineLabelWithArrow
                       value={`${deadline.examName} (${formatDate(
-                        deadline.date
+                        deadline.date,
+                        { day: "numeric", month: "short" }
                       )})`}
                       dy={-(45 + (index % 3) * 25)}
                       fill={color}

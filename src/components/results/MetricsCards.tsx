@@ -1,17 +1,13 @@
 import React from "react";
 import { Award, Wallet } from "lucide-react";
 import type { CalculationResults } from "../../types";
+import { formatNumber } from "../../utils/formatters";
 
 interface MetricsCardsProps {
   results: CalculationResults;
   isFeasible: boolean;
   recommendedSlots: number;
 }
-
-const formatNumber = (num: number, digits = 0) =>
-  new Intl.NumberFormat("en-US", {
-    maximumFractionDigits: digits,
-  }).format(num);
 
 export function MetricsCards({
   results,
