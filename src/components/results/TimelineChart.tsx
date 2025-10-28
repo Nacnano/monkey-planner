@@ -262,7 +262,7 @@ export function TimelineChart({ results }: TimelineChartProps) {
 
               return (
                 <ReferenceLine
-                  key={deadline.examName}
+                  key={deadline.id}
                   x={deadline.daysRemaining}
                   stroke={color}
                   strokeDasharray={isFinalGoal ? "3 3" : "4 4"}

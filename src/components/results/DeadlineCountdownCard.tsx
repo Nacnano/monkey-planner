@@ -21,7 +21,7 @@ export function DeadlineCountdownCard({ results }: DeadlineCountdownCardProps) {
       <div className="space-y-4">
         {examDeadlines.map((deadline) => (
           <div
-            key={deadline.examName}
+            key={deadline.id}
             className="flex justify-between items-center text-gray-600 border-b border-gray-100 pb-3 last:border-b-0 last:pb-0"
           >
             <div>
