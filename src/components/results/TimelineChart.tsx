@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -114,8 +114,12 @@ interface TimelineChartProps {
   isFeasible: boolean;
 }
 
-export function TimelineChart({ results }: TimelineChartProps) {
-  const { inputs, timelineScenarios, examDeadlines } = results;
+export function TimelineChart({
+  results,
+  recommendedSlots,
+  isFeasible,
+}: TimelineChartProps) {
+  const { timelineScenarios, examDeadlines, finalGoalCourseId } = results;
 
   const [minSlotRange, setMinSlotRange] = useState(1);
   const [maxSlotRange, setMaxSlotRange] = useState(7);
@@ -255,7 +259,7 @@ export function TimelineChart({ results }: TimelineChartProps) {
             ))}
 
             {examDeadlines.map((deadline, index) => {
-              const isFinalGoal = deadline.id === inputs.finalGoalCourseId;
+              const isFinalGoal = deadline.id === finalGoalCourseId;
               const color = isFinalGoal
                 ? "#f59e0b"
                 : DEADLINE_COLORS[index % DEADLINE_COLORS.length];

@@ -7,7 +7,7 @@ import type {
 } from "../types";
 
 export const calculatePlan = (data: FormData): CalculationResults => {
-  const { courses, pricePerSlot, finalGoalCourseId } = data;
+  const { courses, pricePerSlot } = data;
 
   const totalSheets = courses.reduce(
     (sum, course) => sum + (course.sheetCount || 0),
@@ -34,9 +34,14 @@ export const calculatePlan = (data: FormData): CalculationResults => {
     })
     .sort((a, b) => a.daysRemaining - b.daysRemaining);
 
-  const finalGoalDeadline = examDeadlines.find(
-    (d) => d.id === finalGoalCourseId
-  );
+  // Automatically determine the final goal as the latest deadline
+  let finalGoalDeadline: ExamDeadline | undefined = undefined;
+  if (examDeadlines.length > 0) {
+    finalGoalDeadline = examDeadlines.reduce((latest, current) => {
+      return current.daysRemaining > latest.daysRemaining ? current : latest;
+    });
+  }
+  const finalGoalCourseId = finalGoalDeadline ? finalGoalDeadline.id : null;
 
   const requiredSlotsPerWeek = courses.reduce((totalSlots, course) => {
     let courseDeadline: ExamDeadline | undefined;
@@ -115,5 +120,6 @@ export const calculatePlan = (data: FormData): CalculationResults => {
     totalFee,
     recommendedPlan,
     timelineScenarios,
+    finalGoalCourseId,
   };
 };

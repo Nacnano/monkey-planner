@@ -14,10 +14,11 @@ export function MetricsCards({
   isFeasible,
   recommendedSlots,
 }: MetricsCardsProps) {
-  const { inputs, totalSheets, totalFee, recommendedPlan } = results;
+  const { inputs, totalSheets, totalFee, recommendedPlan, finalGoalCourseId } =
+    results;
 
   const finalGoalCourse = inputs.courses.find(
-    (c) => c.id === inputs.finalGoalCourseId
+    (c) => c.id === finalGoalCourseId
   );
   const finalGoalName = finalGoalCourse?.examName || "เป้าหมายสุดท้าย";
 

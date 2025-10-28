@@ -19,7 +19,6 @@ export interface FormData {
   studentGoal?: string;
   courses: Course[];
   pricePerSlot: number;
-  finalGoalCourseId: string | null;
 }
 
 export interface CourseBreakdown {
@@ -52,4 +51,5 @@ export interface CalculationResults {
   totalFee: number;
   recommendedPlan: TimelineAnalysis;
   timelineScenarios: TimelineAnalysis[];
+  finalGoalCourseId: string | null;
 }

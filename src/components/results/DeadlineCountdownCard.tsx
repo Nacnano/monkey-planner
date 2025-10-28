@@ -8,7 +8,7 @@ interface DeadlineCountdownCardProps {
 }
 
 export function DeadlineCountdownCard({ results }: DeadlineCountdownCardProps) {
-  const { inputs, examDeadlines } = results;
+  const { examDeadlines, finalGoalCourseId } = results;
 
   return (
     <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200">
@@ -27,7 +27,7 @@ export function DeadlineCountdownCard({ results }: DeadlineCountdownCardProps) {
             <div>
               <p className="font-bold text-gray-800 flex items-center text-base">
                 {deadline.examName}
-                {deadline.id === inputs.finalGoalCourseId && (
+                {deadline.id === finalGoalCourseId && (
                   <span className="ml-2 text-amber-500" title="เป้าหมายสุดท้าย">
                     ⭐
                   </span>

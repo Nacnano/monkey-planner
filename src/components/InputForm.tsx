@@ -19,11 +19,6 @@ export function InputForm({ onCalculate }: InputFormProps) {
   const [studentGoal, setStudentGoal] = useState("");
   const [pricePerSlot, setPricePerSlot] = useState(500);
   const [courses, setCourses] = useState<Course[]>(initialCourses);
-  const [finalGoalCourseId, setFinalGoalCourseId] = useState<string | null>(
-    initialCourses.length > 0
-      ? initialCourses[initialCourses.length - 1].id
-      : null
-  );
   const [errors, setErrors] = useState<string[]>([]);
   const [draggedCourseId, setDraggedCourseId] = useState<string | null>(null);
 
@@ -39,7 +34,6 @@ export function InputForm({ onCalculate }: InputFormProps) {
     if (!pricePerSlot || pricePerSlot <= 0)
       validationErrors.push("ราคาต่อคาบเรียนต้องมากกว่า 0");
 
-    let hasAtLeastOneDeadline = false;
     courses.forEach((c, i) => {
       if (!c.name.trim())
         validationErrors.push(`คอร์สเรียน #${i + 1} ต้องมีชื่อ`);
@@ -48,18 +42,12 @@ export function InputForm({ onCalculate }: InputFormProps) {
           `คอร์ส "${c.name || `#${i + 1}`}" ต้องมีจำนวนชีทมากกว่า 0`
         );
       if (c.examName || c.examDate) {
-        hasAtLeastOneDeadline = true;
         if (!c.examName)
           validationErrors.push(`คอร์ส "${c.name}" ต้องมีชื่อการสอบ`);
         if (!c.examDate)
           validationErrors.push(`คอร์ส "${c.name}" ต้องมีวันสอบ`);
       }
     });
-
-    if (!finalGoalCourseId && hasAtLeastOneDeadline)
-      validationErrors.push(
-        "ต้องเลือกกำหนดเวลาที่เป็นเป้าหมายสุดท้าย (ค่าเริ่มต้น)"
-      );
 
     setErrors(validationErrors);
 
@@ -70,7 +58,6 @@ export function InputForm({ onCalculate }: InputFormProps) {
         studentGoal,
         courses,
         pricePerSlot,
-        finalGoalCourseId,
       });
     } else {
       stableOnCalculate(null);
@@ -81,7 +68,6 @@ export function InputForm({ onCalculate }: InputFormProps) {
     studentGoal,
     pricePerSlot,
     courses,
-    finalGoalCourseId,
     stableOnCalculate,
   ]);
 
@@ -94,14 +80,7 @@ export function InputForm({ onCalculate }: InputFormProps) {
 
   const removeCourse = (id: string) => {
     setCourses((prevCourses) => {
-      const newCourses = prevCourses.filter((course) => course.id !== id);
-      if (id === finalGoalCourseId) {
-        const lastCourseWithDeadline = [...newCourses]
-          .reverse()
-          .find((c) => c.examDate && c.examName);
-        setFinalGoalCourseId(lastCourseWithDeadline?.id || null);
-      }
-      return newCourses;
+      return prevCourses.filter((course) => course.id !== id);
     });
   };
 
@@ -184,11 +163,9 @@ export function InputForm({ onCalculate }: InputFormProps) {
       <CourseList
         courses={courses}
         draggedCourseId={draggedCourseId}
-        finalGoalCourseId={finalGoalCourseId}
         onAddCourse={addCourse}
         onRemoveCourse={removeCourse}
         onUpdateCourse={updateCourse}
-        onSetFinalGoal={setFinalGoalCourseId}
         onDragStart={handleDragStart}
         onDragEnd={() => setDraggedCourseId(null)}
         onDrop={handleDrop}

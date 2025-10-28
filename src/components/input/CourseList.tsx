@@ -6,11 +6,9 @@ import { CourseInput } from "../CourseInput";
 interface CourseListProps {
   courses: Course[];
   draggedCourseId: string | null;
-  finalGoalCourseId: string | null;
   onAddCourse: () => void;
   onRemoveCourse: (id: string) => void;
   onUpdateCourse: (id: string, data: Partial<Course>) => void;
-  onSetFinalGoal: (id: string) => void;
   onDragStart: (id: string) => void;
   onDragEnd: () => void;
   onDrop: (id: string) => void;
@@ -19,11 +17,9 @@ interface CourseListProps {
 export function CourseList({
   courses,
   draggedCourseId,
-  finalGoalCourseId,
   onAddCourse,
   onRemoveCourse,
   onUpdateCourse,
-  onSetFinalGoal,
   onDragStart,
   onDragEnd,
   onDrop,
@@ -46,8 +42,6 @@ export function CourseList({
             onUpdate={onUpdateCourse}
             onRemove={onRemoveCourse}
             isDragging={draggedCourseId === course.id}
-            isFinalGoal={finalGoalCourseId === course.id}
-            onSetFinalGoal={onSetFinalGoal}
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
             onDrop={onDrop}
