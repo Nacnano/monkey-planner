@@ -11,7 +11,7 @@ interface ResultsDisplayProps {
 }
 
 export function ResultsDisplay({ results }: ResultsDisplayProps) {
-  const { requiredSlotsPerWeek, timelineScenarios, inputs } = results;
+  const { requiredSlotsPerWeek, inputs } = results;
 
   const isFeasible = isFinite(requiredSlotsPerWeek) && requiredSlotsPerWeek > 0;
   const recommendedSlots = isFeasible ? Math.ceil(requiredSlotsPerWeek) : 0;
