@@ -2,8 +2,11 @@ export interface Course {
   id: string;
   name: string;
   sheetCount: number;
+  examName?: string;
+  examDate?: string;
 }
 
+// FIX: Add missing Exam interface to resolve compilation errors.
 export interface Exam {
   id: string;
   name: string;
@@ -15,9 +18,8 @@ export interface FormData {
   studentNickname: string;
   studentGoal?: string;
   courses: Course[];
-  exams: Exam[];
   pricePerSlot: number;
-  finalGoalExamId: string | null;
+  finalGoalCourseId: string | null;
 }
 
 export interface CourseBreakdown {

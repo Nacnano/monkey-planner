@@ -27,7 +27,7 @@ export function DeadlineCountdownCard({ results }: DeadlineCountdownCardProps) {
             <div>
               <p className="font-bold text-gray-800 flex items-center text-base">
                 {deadline.examName}
-                {deadline.id === inputs.finalGoalExamId && (
+                {deadline.id === inputs.finalGoalCourseId && (
                   <span className="ml-2 text-amber-500" title="เป้าหมายสุดท้าย">
                     ⭐
                   </span>

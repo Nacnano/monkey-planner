@@ -15,9 +15,11 @@ export function MetricsCards({
   recommendedSlots,
 }: MetricsCardsProps) {
   const { inputs, totalSheets, totalFee, recommendedPlan } = results;
-  const finalGoalName =
-    inputs.exams.find((e) => e.id === inputs.finalGoalExamId)?.name ||
-    "เป้าหมายสุดท้าย";
+
+  const finalGoalCourse = inputs.courses.find(
+    (c) => c.id === inputs.finalGoalCourseId
+  );
+  const finalGoalName = finalGoalCourse?.examName || "เป้าหมายสุดท้าย";
 
   const recommendation = {
     slots: recommendedSlots,

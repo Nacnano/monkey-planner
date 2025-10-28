@@ -89,7 +89,7 @@ export function ExamInput({
               isFinalGoal ? "text-sky-800 font-bold" : "text-gray-700"
             }`}
           >
-            ตั้งเป็นเป้าหมายสุดท้ายสำหรับการคำนวณ
+            ตั้งเป็นเป้าหมายสุดท้าย (ค่าเริ่มต้น)
           </span>
         </label>
       </div>
