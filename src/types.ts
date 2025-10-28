@@ -11,6 +11,9 @@ export interface Exam {
 }
 
 export interface FormData {
+  studentName?: string;
+  studentNickname: string;
+  studentGoal?: string;
   courses: Course[];
   exams: Exam[];
   pricePerSlot: number;

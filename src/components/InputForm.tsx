@@ -6,12 +6,16 @@ import { ExamList } from "./input/ExamList";
 import { ValidationErrorDisplay } from "./input/ValidationErrorDisplay";
 import { createDueDate } from "../utils/dateUtils";
 import { initialCourses, initialExams } from "../data/initialData";
+import { StudentInfoInput } from "./input/StudentInfoInput";
 
 interface InputFormProps {
   onCalculate: (data: FormData | null) => void;
 }
 
 export function InputForm({ onCalculate }: InputFormProps) {
+  const [studentName, setStudentName] = useState("");
+  const [studentNickname, setStudentNickname] = useState("");
+  const [studentGoal, setStudentGoal] = useState("");
   const [pricePerSlot, setPricePerSlot] = useState(500);
   const [courses, setCourses] = useState<Course[]>(initialCourses);
   const [exams, setExams] = useState<Exam[]>(initialExams);
@@ -25,6 +29,8 @@ export function InputForm({ onCalculate }: InputFormProps) {
 
   useEffect(() => {
     const validationErrors: string[] = [];
+    if (!studentNickname.trim())
+      validationErrors.push("ต้องระบุชื่อเล่นของนักเรียน");
     if (!pricePerSlot || pricePerSlot <= 0)
       validationErrors.push("ราคาต่อคาบเรียนต้องมากกว่า 0");
     courses.forEach((c, i) => {
@@ -48,11 +54,28 @@ export function InputForm({ onCalculate }: InputFormProps) {
     setErrors(validationErrors);
 
     if (validationErrors.length === 0) {
-      stableOnCalculate({ courses, exams, pricePerSlot, finalGoalExamId });
+      stableOnCalculate({
+        studentName,
+        studentNickname,
+        studentGoal,
+        courses,
+        exams,
+        pricePerSlot,
+        finalGoalExamId,
+      });
     } else {
       stableOnCalculate(null);
     }
-  }, [pricePerSlot, courses, exams, finalGoalExamId, stableOnCalculate]);
+  }, [
+    studentName,
+    studentNickname,
+    studentGoal,
+    pricePerSlot,
+    courses,
+    exams,
+    finalGoalExamId,
+    stableOnCalculate,
+  ]);
 
   const addCourse = () => {
     setCourses([
@@ -119,6 +142,17 @@ export function InputForm({ onCalculate }: InputFormProps) {
 
   return (
     <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200 space-y-6">
+      <StudentInfoInput
+        studentName={studentName}
+        setStudentName={setStudentName}
+        studentNickname={studentNickname}
+        setStudentNickname={setStudentNickname}
+        studentGoal={studentGoal}
+        setStudentGoal={setStudentGoal}
+      />
+
+      <div className="border-t border-gray-200 !mt-8"></div>
+
       <PricingInput
         pricePerSlot={pricePerSlot}
         setPricePerSlot={setPricePerSlot}
