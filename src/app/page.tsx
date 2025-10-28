@@ -22,7 +22,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 p-4 sm:p-6 lg:p-8">
-      <main className="max-w-7xl mx-auto">
+      <main className="max-w-5xl mx-auto">
         <header className="text-center mb-10">
           <div className="flex justify-center items-center gap-3">
             <BookOpen className="h-10 w-10 text-sky-600" />
@@ -36,26 +36,41 @@ function App() {
           </p>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-          <div className="lg:col-span-2">
-            <div className="space-y-8">
-              <InputForm onCalculate={handleCalculate} />
-              <AssumptionsCard />
+        <div className="grid grid-cols-1 gap-12">
+          {/* --- Input Section --- */}
+          <div className="space-y-8">
+            <InputForm onCalculate={handleCalculate} />
+            <AssumptionsCard />
+          </div>
+
+          {/* --- Divider --- */}
+          <div className="relative">
+            <div
+              className="absolute inset-0 flex items-center"
+              aria-hidden="true"
+            >
+              <div className="w-full border-t border-gray-300 border-dashed" />
+            </div>
+            <div className="relative flex justify-center">
+              <span className="bg-gray-50 px-3 text-gray-500">
+                <Target className="h-6 w-6" />
+              </span>
             </div>
           </div>
 
-          <div className="lg:col-span-3">
+          {/* --- Results Section --- */}
+          <div>
             {results ? (
               <ResultsDisplay results={results} />
             ) : (
-              <div className="flex flex-col items-center justify-center h-full bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
+              <div className="flex flex-col items-center justify-center min-h-[300px] bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
                 <div className="text-center">
-                  <Target className="h-20 w-20 mx-auto text-gray-300 mb-4" />
+                  <Target className="h-16 w-16 mx-auto text-gray-300 mb-4" />
                   <h2 className="text-2xl font-bold text-gray-800">
                     แผนการเรียนของคุณ
                   </h2>
                   <p className="mt-2 text-gray-500 max-w-sm mx-auto">
-                    กรอกข้อมูลคอร์สเรียนและกำหนดเวลาสอบทางด้านซ้ายเพื่อดูแผนการเรียนส่วนตัวของคุณ
+                    กรอกข้อมูลคอร์สเรียนและกำหนดเวลาสอบด้านบนเพื่อดูแผนการเรียนส่วนตัวของคุณ
                   </p>
                 </div>
               </div>

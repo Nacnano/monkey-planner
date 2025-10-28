@@ -26,8 +26,8 @@ export function StudentInfoInput({
           ระบุข้อมูลเพื่อปรับแผนการเรียนให้เป็นส่วนตัว
         </p>
       </div>
-      <div className="space-y-4">
-        <div>
+      <div className="flex flex-col md:flex-row gap-4">
+        <div className="flex-1">
           <label
             htmlFor="studentNickname"
             className="flex items-center text-sm font-medium text-gray-700 mb-1"
@@ -45,7 +45,7 @@ export function StudentInfoInput({
             className="w-full p-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-sky-500 focus:border-sky-500"
           />
         </div>
-        <div>
+        <div className="flex-1">
           <label
             htmlFor="studentName"
             className="flex items-center text-sm font-medium text-gray-700 mb-1"
@@ -62,7 +62,7 @@ export function StudentInfoInput({
             className="w-full p-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-sky-500 focus:border-sky-500"
           />
         </div>
-        <div>
+        <div className="flex-1">
           <label
             htmlFor="studentGoal"
             className="flex items-center text-sm font-medium text-gray-700 mb-1"
