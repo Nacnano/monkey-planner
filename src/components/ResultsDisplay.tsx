@@ -48,13 +48,13 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
         </div>
       </div>
 
+      <DeadlineCountdownCard results={results} />
+
       <TimelineChart
         results={results}
         recommendedSlots={recommendedSlots}
         isFeasible={isFeasible}
       />
-
-      <DeadlineCountdownCard results={results} />
 
       <MetricsCards
         results={results}
