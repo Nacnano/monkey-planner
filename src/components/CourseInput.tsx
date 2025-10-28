@@ -1,6 +1,6 @@
 import React from "react";
 import type { Course } from "../types";
-import { Trash2, GripVertical, Calendar } from "lucide-react";
+import { Trash2, GripVertical } from "lucide-react";
 
 interface CourseInputProps {
   course: Course;
