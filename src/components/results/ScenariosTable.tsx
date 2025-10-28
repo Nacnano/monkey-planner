@@ -1,17 +1,21 @@
 import React from "react";
-import type { TimelineAnalysis } from "../../types";
+import type { CalculationResults, TimelineAnalysis } from "../../types";
 import { CalendarDays } from "lucide-react";
-import { formatNumber } from "../../utils/formatters";
+import { formatNumber, formatDate } from "../../utils/formatters";
 
 interface ScenariosTableProps {
-  timelineScenarios: TimelineAnalysis[];
+  results: CalculationResults;
   recommendedSlots: number;
 }
 
 export function ScenariosTable({
-  timelineScenarios,
+  results,
   recommendedSlots,
 }: ScenariosTableProps) {
+  // FIX: Property 'recommendedSlots' does not exist on type 'CalculationResults'.
+  // It is now passed in as a separate prop.
+  const { timelineScenarios, examDeadlines } = results;
+
   const getRowClass = (scenario: TimelineAnalysis, index: number): string => {
     const isRecommended = scenario.slotsPerWeek === recommendedSlots;
     if (isRecommended) {
@@ -36,6 +40,25 @@ export function ScenariosTable({
               <th scope="col" className="px-6 py-3">
                 จำนวนเดือนทั้งหมดที่ใช้เรียน
               </th>
+              {examDeadlines.map((deadline) => (
+                <th
+                  key={deadline.id}
+                  scope="col"
+                  className="px-6 py-3 text-center"
+                >
+                  <div className="flex flex-col items-center">
+                    <span>{deadline.examName}</span>
+                    <span className="text-xs font-normal text-gray-500">
+                      (
+                      {formatDate(deadline.date, {
+                        day: "numeric",
+                        month: "short",
+                      })}
+                      )
+                    </span>
+                  </div>
+                </th>
+              ))}
               <th scope="col" className="px-6 py-3">
                 บรรลุเป้าหมายสุดท้าย?
               </th>
@@ -61,6 +84,41 @@ export function ScenariosTable({
                     ? formatNumber(s.monthsToFinish, 1)
                     : "N/A"}
                 </td>
+                {examDeadlines.map((deadline) => {
+                  const successStatus = s.deadlineSuccess.find(
+                    (ds) => ds.deadlineId === deadline.id
+                  );
+                  const isDeadlineMet = successStatus
+                    ? successStatus.isSuccess
+                    : false;
+                  return (
+                    <td key={deadline.id} className="px-6 py-4 text-center">
+                      {isDeadlineMet ? (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          <svg
+                            className="-ml-0.5 mr-1.5 h-2 w-2 text-green-400"
+                            fill="currentColor"
+                            viewBox="0 0 8 8"
+                          >
+                            <circle cx="4" cy="4" r="3" />
+                          </svg>
+                          ใช่
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                          <svg
+                            className="-ml-0.5 mr-1.5 h-2 w-2 text-red-400"
+                            fill="currentColor"
+                            viewBox="0 0 8 8"
+                          >
+                            <circle cx="4" cy="4" r="3" />
+                          </svg>
+                          ไม่
+                        </span>
+                      )}
+                    </td>
+                  );
+                })}
                 <td className="px-6 py-4">
                   {s.isSuccess ? (
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">

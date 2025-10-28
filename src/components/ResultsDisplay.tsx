@@ -62,10 +62,7 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
         recommendedSlots={recommendedSlots}
       />
 
-      <ScenariosTable
-        timelineScenarios={timelineScenarios}
-        recommendedSlots={recommendedSlots}
-      />
+      <ScenariosTable results={results} recommendedSlots={recommendedSlots} />
     </div>
   );
 }

@@ -6,7 +6,6 @@ export interface Course {
   examDate?: string;
 }
 
-// FIX: Add missing Exam interface to resolve compilation errors.
 export interface Exam {
   id: string;
   name: string;
@@ -26,6 +25,11 @@ export interface CourseBreakdown {
   daysToFinish: number;
 }
 
+export interface DeadlineSuccessStatus {
+  deadlineId: string;
+  isSuccess: boolean;
+}
+
 export interface TimelineAnalysis {
   slotsPerWeek: number;
   weeksToFinish: number;
@@ -34,6 +38,7 @@ export interface TimelineAnalysis {
   isSuccess: boolean;
   monthlyFee: number;
   courseBreakdown: CourseBreakdown[];
+  deadlineSuccess: DeadlineSuccessStatus[];
 }
 
 export interface ExamDeadline {
