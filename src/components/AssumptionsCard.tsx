@@ -8,13 +8,19 @@ const ASSUMPTIONS = [
   "นักเรียนไม่ลา ไม่ขาดเรียน",
 ];
 
-export function AssumptionsCard() {
-  return (
-    <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200">
-      <h3 className="flex items-center text-lg font-bold text-gray-800 mb-4">
-        <HelpCircle className="h-6 w-6 mr-3 text-amber-500" />
-        ข้อสมมติฐาน (Assumptions)
-      </h3>
+interface AssumptionsCardProps {
+  isModal?: boolean;
+}
+
+export function AssumptionsCard({ isModal = false }: AssumptionsCardProps) {
+  const content = (
+    <>
+      {!isModal && (
+        <h3 className="flex items-center text-lg font-bold text-gray-800 mb-4">
+          <HelpCircle className="h-6 w-6 mr-3 text-amber-500" />
+          ข้อสมมติฐาน (Assumptions)
+        </h3>
+      )}
       <ul className="space-y-3 text-gray-600">
         {ASSUMPTIONS.map((item, index) => (
           <li key={index} className="flex items-start">
@@ -25,6 +31,16 @@ export function AssumptionsCard() {
           </li>
         ))}
       </ul>
+    </>
+  );
+
+  if (isModal) {
+    return content;
+  }
+
+  return (
+    <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200">
+      {content}
     </div>
   );
 }

@@ -6,7 +6,6 @@ import { InputForm } from "@/components/InputForm";
 import { ResultsDisplay } from "@/components/ResultsDisplay";
 import type { FormData, CalculationResults } from "@/types";
 import { calculatePlan } from "@/services/calculationService";
-import { AssumptionsCard } from "@/components/AssumptionsCard";
 
 function App() {
   const [results, setResults] = useState<CalculationResults | null>(null);
@@ -38,10 +37,7 @@ function App() {
 
         <div className="grid grid-cols-1 gap-12">
           {/* --- Input Section --- */}
-          <div className="space-y-8">
-            <InputForm onCalculate={handleCalculate} />
-            <AssumptionsCard />
-          </div>
+          <InputForm onCalculate={handleCalculate} />
 
           {/* --- Divider --- */}
           <div className="relative">

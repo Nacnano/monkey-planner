@@ -7,6 +7,9 @@ import { ValidationErrorDisplay } from "./input/ValidationErrorDisplay";
 import { createDueDate } from "../utils/dateUtils";
 import { initialCourses, initialExams } from "../data/initialData";
 import { StudentInfoInput } from "./input/StudentInfoInput";
+import { Modal } from "./Modal";
+import { AssumptionsCard } from "./AssumptionsCard";
+import { DollarSign, HelpCircle } from "lucide-react";
 
 interface InputFormProps {
   onCalculate: (data: FormData | null) => void;
@@ -24,6 +27,9 @@ export function InputForm({ onCalculate }: InputFormProps) {
   );
   const [errors, setErrors] = useState<string[]>([]);
   const [draggedCourseId, setDraggedCourseId] = useState<string | null>(null);
+
+  const [isPriceModalOpen, setIsPriceModalOpen] = useState(false);
+  const [isAssumptionsModalOpen, setIsAssumptionsModalOpen] = useState(false);
 
   const stableOnCalculate = useCallback(onCalculate, [onCalculate]);
 
@@ -151,14 +157,46 @@ export function InputForm({ onCalculate }: InputFormProps) {
         setStudentGoal={setStudentGoal}
       />
 
-      <div className="border-t border-gray-200 !mt-8"></div>
+      <div className="flex items-center gap-2 pt-2">
+        <button
+          type="button"
+          onClick={() => setIsPriceModalOpen(true)}
+          className="flex-1 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 flex items-center justify-center p-2"
+        >
+          <DollarSign className="h-4 w-4 mr-2" />
+          ตั้งค่าราคา
+        </button>
+        <button
+          type="button"
+          onClick={() => setIsAssumptionsModalOpen(true)}
+          className="flex-1 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 flex items-center justify-center p-2"
+        >
+          <HelpCircle className="h-4 w-4 mr-2" />
+          ดูข้อสมมติฐาน
+        </button>
+      </div>
 
-      <PricingInput
-        pricePerSlot={pricePerSlot}
-        setPricePerSlot={setPricePerSlot}
-      />
+      <Modal
+        isOpen={isPriceModalOpen}
+        onClose={() => setIsPriceModalOpen(false)}
+        title="ตั้งค่าราคาต่อคาบเรียน"
+      >
+        <PricingInput
+          pricePerSlot={pricePerSlot}
+          setPricePerSlot={setPricePerSlot}
+          isModal={true}
+        />
+      </Modal>
 
-      <div className="border-t border-gray-200 !mt-8"></div>
+      <Modal
+        isOpen={isAssumptionsModalOpen}
+        onClose={() => setIsAssumptionsModalOpen(false)}
+        title="ข้อสมมติฐาน (Assumptions)"
+      >
+        <AssumptionsCard isModal={true} />
+      </Modal>
+
+      <div className="border-t border-gray-200 !mt-6"></div>
 
       <CourseList
         courses={courses}

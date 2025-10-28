@@ -19,8 +19,11 @@ const prompt = Prompt({
 });
 
 export const metadata: Metadata = {
-  title: "Monkey Planner",
+  title: "เครื่องมือวางแผนคอร์สเรียนและงบประมาณ",
   description: "A study plan and budget calculator for students.",
+  // Note: Next.js handles charset and viewport meta tags automatically.
+  // To add the icon, place a "favicon.ico" or "icon.svg"
+  // (renamed from vite.svg) in your "app/" directory.
 };
 
 export default function RootLayout({
@@ -29,9 +32,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="th">
       <body
-        className={`${geistSans.className} ${geistMono.className} ${prompt.className} antialiased`}
+        className={`${geistSans.className} ${geistMono.className} ${prompt.className} antialiased bg-slate-50`}
       >
         {children}
       </body>

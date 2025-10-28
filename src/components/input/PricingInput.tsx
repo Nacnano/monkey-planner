@@ -4,20 +4,24 @@ import { DollarSign } from "lucide-react";
 interface PricingInputProps {
   pricePerSlot: number;
   setPricePerSlot: (value: number) => void;
+  isModal?: boolean;
 }
 
 export function PricingInput({
   pricePerSlot,
   setPricePerSlot,
+  isModal = false,
 }: PricingInputProps) {
   return (
     <div>
-      <div className="space-y-1 mb-4">
-        <h2 className="text-xl font-bold text-gray-800">แผนและราคา</h2>
-        <p className="text-sm text-gray-500">
-          กำหนดค่าใช้จ่ายและจำนวนครั้งที่เรียนต่อสัปดาห์
-        </p>
-      </div>
+      {!isModal && (
+        <div className="space-y-1 mb-4">
+          <h2 className="text-xl font-bold text-gray-800">แผนและราคา</h2>
+          <p className="text-sm text-gray-500">
+            กำหนดค่าใช้จ่ายและจำนวนครั้งที่เรียนต่อสัปดาห์
+          </p>
+        </div>
+      )}
       <label
         htmlFor="price"
         className="flex items-center text-sm font-medium text-gray-700 mb-1"

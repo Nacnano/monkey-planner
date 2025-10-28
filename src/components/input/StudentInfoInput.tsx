@@ -26,7 +26,7 @@ export function StudentInfoInput({
           ระบุข้อมูลเพื่อปรับแผนการเรียนให้เป็นส่วนตัว
         </p>
       </div>
-      <div className="flex flex-col md:flex-row gap-4">
+      <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex-1">
           <label
             htmlFor="studentNickname"
