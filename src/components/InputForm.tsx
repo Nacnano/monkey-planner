@@ -41,12 +41,6 @@ export function InputForm({ onCalculate }: InputFormProps) {
         validationErrors.push(
           `คอร์ส "${c.name || `#${i + 1}`}" ต้องมีจำนวนชีทมากกว่า 0`
         );
-      if (c.examName || c.examDate) {
-        if (!c.examName)
-          validationErrors.push(`คอร์ส "${c.name}" ต้องมีชื่อการสอบ`);
-        if (!c.examDate)
-          validationErrors.push(`คอร์ส "${c.name}" ต้องมีวันสอบ`);
-      }
     });
 
     setErrors(validationErrors);

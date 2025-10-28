@@ -55,11 +55,13 @@ export function CourseInput({
           : "bg-white border-gray-200"
       }`}
     >
-      {/* --- Unified Input Row --- */}
       <div className="flex flex-wrap items-end gap-x-4 gap-y-3">
+        {/* Drag Handle */}
         <div className="flex-shrink-0 self-center text-gray-400 cursor-grab drag-handle">
           <GripVertical className="h-5 w-5" />
         </div>
+
+        {/* Required Fields */}
         <div className="flex-grow min-w-[160px]">
           <label
             htmlFor={`courseName-${course.id}`}
@@ -97,41 +99,43 @@ export function CourseInput({
           />
         </div>
 
-        {/* --- Optional Deadline Info --- */}
-        <div className="hidden lg:flex self-stretch items-center">
-          <div className="h-10 border-l border-gray-200"></div>
-        </div>
-
-        <div className="flex-grow min-w-[160px]">
-          <label
-            htmlFor={`examName-${course.id}`}
-            className="text-xs font-medium text-gray-500"
-          >
-            ชื่อการสอบ/กำหนดเวลา (ถ้ามี)
-          </label>
-          <input
-            type="text"
-            id={`examName-${course.id}`}
-            placeholder="เช่น สอบกลางภาค"
-            value={course.examName || ""}
-            onChange={(e) => onUpdate(course.id, { examName: e.target.value })}
-            className="w-full p-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm text-sm focus:ring-sky-500 focus:border-sky-500"
-          />
-        </div>
-        <div className="flex-shrink-0">
-          <label
-            htmlFor={`examDate-${course.id}`}
-            className="text-xs font-medium text-gray-500"
-          >
-            วันสอบ (ถ้ามี)
-          </label>
-          <input
-            type="date"
-            id={`examDate-${course.id}`}
-            value={course.examDate || ""}
-            onChange={(e) => onUpdate(course.id, { examDate: e.target.value })}
-            className="w-full p-2 border border-gray-300 rounded-lg shadow-sm text-sm focus:ring-sky-500 focus:border-sky-500"
-          />
+        {/* --- Optional Deadline Info - Grouped and styled for better UX --- */}
+        <div className="flex flex-wrap items-end gap-x-4 gap-y-2 flex-grow min-w-[320px] p-3 rounded-lg bg-slate-50/70 border border-slate-200 border-dashed">
+          <div className="flex-grow min-w-[160px]">
+            <label
+              htmlFor={`examName-${course.id}`}
+              className="text-xs font-medium text-gray-500"
+            >
+              ชื่อการสอบ/กำหนดเวลา (ถ้ามี)
+            </label>
+            <input
+              type="text"
+              id={`examName-${course.id}`}
+              placeholder="เช่น สอบกลางภาค"
+              value={course.examName || ""}
+              onChange={(e) =>
+                onUpdate(course.id, { examName: e.target.value })
+              }
+              className="w-full p-2 bg-white border border-gray-300 rounded-lg shadow-sm text-sm focus:ring-sky-500 focus:border-sky-500"
+            />
+          </div>
+          <div className="flex-shrink-0">
+            <label
+              htmlFor={`examDate-${course.id}`}
+              className="text-xs font-medium text-gray-500"
+            >
+              วันสอบ (ถ้ามี)
+            </label>
+            <input
+              type="date"
+              id={`examDate-${course.id}`}
+              value={course.examDate || ""}
+              onChange={(e) =>
+                onUpdate(course.id, { examDate: e.target.value })
+              }
+              className="w-full p-2 border bg-white border-gray-300 rounded-lg shadow-sm text-sm focus:ring-sky-500 focus:border-sky-500"
+            />
+          </div>
         </div>
 
         {/* Trash Button */}
