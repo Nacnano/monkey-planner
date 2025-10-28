@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   BarChart,
   Bar,
@@ -114,11 +114,7 @@ interface TimelineChartProps {
   isFeasible: boolean;
 }
 
-export function TimelineChart({
-  results,
-  recommendedSlots,
-  isFeasible,
-}: TimelineChartProps) {
+export function TimelineChart({ results }: TimelineChartProps) {
   const { inputs, timelineScenarios, examDeadlines } = results;
 
   const [minSlotRange, setMinSlotRange] = useState(1);
