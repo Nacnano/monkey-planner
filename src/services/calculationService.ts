@@ -104,7 +104,7 @@ export const calculatePlan = (data: FormData): CalculationResults => {
   const recommendedPlan = calculateScenario(recommendedSlots);
 
   const timelineScenarios: TimelineAnalysis[] = [];
-  const maxSlotsToDisplay = Math.max(10, Math.ceil(requiredSlotsPerWeek) + 5);
+  const maxSlotsToDisplay = 7;
 
   for (let i = 1; i <= maxSlotsToDisplay; i++) {
     timelineScenarios.push(calculateScenario(i));

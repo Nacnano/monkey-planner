@@ -122,18 +122,7 @@ export function TimelineChart({
   const { inputs, timelineScenarios, examDeadlines } = results;
 
   const [minSlotRange, setMinSlotRange] = useState(1);
-  const [maxSlotRange, setMaxSlotRange] = useState(10);
-
-  useEffect(() => {
-    const focusPoints = [isFeasible ? recommendedSlots : 1];
-    const minFocus = Math.min(...focusPoints);
-    const maxFocus = Math.max(...focusPoints);
-    const range = 5;
-    const defaultMin = Math.max(1, minFocus - range);
-    const defaultMax = maxFocus + range;
-    setMinSlotRange(defaultMin);
-    setMaxSlotRange(defaultMax);
-  }, [results, recommendedSlots, isFeasible]);
+  const [maxSlotRange, setMaxSlotRange] = useState(7);
 
   const visibleScenarios = timelineScenarios.filter(
     (s) => s.slotsPerWeek >= minSlotRange && s.slotsPerWeek <= maxSlotRange
@@ -175,6 +164,7 @@ export function TimelineChart({
               setMinSlotRange(Math.max(1, Number(e.target.value)))
             }
             min="1"
+            max={maxSlotRange - 1}
             className="w-16 p-1 text-center bg-gray-100 border border-gray-300 rounded-md focus:ring-sky-500 focus:border-sky-500"
             aria-label="จำนวนคาบเรียนขั้นต่ำต่อสัปดาห์"
           />
@@ -185,6 +175,7 @@ export function TimelineChart({
             value={maxSlotRange}
             onChange={(e) => setMaxSlotRange(Number(e.target.value))}
             min={minSlotRange + 1}
+            max="7"
             className="w-16 p-1 text-center bg-gray-100 border border-gray-300 rounded-md focus:ring-sky-500 focus:border-sky-500"
             aria-label="จำนวนคาบเรียนสูงสุดต่อสัปดาห์"
           />
