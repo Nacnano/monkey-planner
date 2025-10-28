@@ -142,13 +142,13 @@ export function TimelineChart({ results }: TimelineChartProps) {
   );
 
   return (
-    <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200">
+    <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200 print-card">
       <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
         <h3 className="flex items-center text-xl font-bold text-gray-800">
-          <BarChart2 className="h-6 w-6 mr-3 text-violet-500" />
+          <BarChart2 className="h-6 w-6 mr-3 text-violet-500 no-print" />
           ภาพรวมแผนการเรียน
         </h3>
-        <div className="flex items-center gap-2 sm:gap-4 text-sm">
+        <div className="flex items-center gap-2 sm:gap-4 text-sm no-print">
           <label htmlFor="minSlots" className="font-medium text-gray-600">
             ช่วงคาบเรียน:
           </label>

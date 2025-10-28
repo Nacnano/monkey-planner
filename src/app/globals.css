@@ -63,16 +63,19 @@
     margin: 0 !important;
   }
 
-  #results-section .p-6 {
-    padding: 0 !important;
+  /* Reset spacing from Tailwind's space-y utility */
+  #results-section .space-y-8 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 0 !important;
   }
 
-  #results-section > div > div {
-    /* Each card */
+  /* Consistent card styling for printing */
+  .print-card {
+    padding: 1rem !important;
     box-shadow: none !important;
     border: 1px solid #e5e7eb !important;
-    margin-bottom: 1.5rem;
-    page-break-inside: avoid;
+    border-radius: 0 !important; /* Sharp corners for print */
+    margin-bottom: 1rem !important; /* Spacing between cards */
+    page-break-inside: avoid !important;
   }
 }
 

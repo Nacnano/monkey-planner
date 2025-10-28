@@ -25,10 +25,10 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
 
   return (
     <div className="space-y-8 animate-fade-in">
-      <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200">
+      <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200 print-card">
         <div className="flex flex-wrap justify-between items-center gap-4">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-sky-100 rounded-full">
+            <div className="p-3 bg-sky-100 rounded-full no-print">
               <User className="h-8 w-8 text-sky-600" />
             </div>
             <div>

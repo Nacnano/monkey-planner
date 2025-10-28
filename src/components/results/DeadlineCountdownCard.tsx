@@ -11,9 +11,9 @@ export function DeadlineCountdownCard({ results }: DeadlineCountdownCardProps) {
   const { examDeadlines, finalGoalCourseId } = results;
 
   return (
-    <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200">
+    <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200 print-card">
       <div className="flex items-center mb-4">
-        <div className="p-3 bg-amber-100 rounded-full mr-4">
+        <div className="p-3 bg-amber-100 rounded-full mr-4 no-print">
           <Clock className="h-6 w-6 text-amber-600" />
         </div>
         <h3 className="text-lg font-bold text-gray-800">นับถอยหลังถึงวันสอบ</h3>

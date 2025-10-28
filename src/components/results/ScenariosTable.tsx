@@ -12,8 +12,6 @@ export function ScenariosTable({
   results,
   recommendedSlots,
 }: ScenariosTableProps) {
-  // FIX: Property 'recommendedSlots' does not exist on type 'CalculationResults'.
-  // It is now passed in as a separate prop.
   const { timelineScenarios, examDeadlines } = results;
 
   const getRowClass = (scenario: TimelineAnalysis, index: number): string => {
@@ -25,9 +23,9 @@ export function ScenariosTable({
   };
 
   return (
-    <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200">
+    <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200 print-card">
       <h3 className="flex items-center text-xl font-bold text-gray-800 mb-4">
-        <CalendarDays className="h-6 w-6 mr-3 text-indigo-500" />
+        <CalendarDays className="h-6 w-6 mr-3 text-indigo-500 no-print" />
         สถานการณ์และรายละเอียดของแผน
       </h3>
       <div className="overflow-x-auto">

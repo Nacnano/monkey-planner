@@ -32,9 +32,9 @@ export function MetricsCards({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* Recommendation Card */}
-      <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200 flex flex-col">
+      <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200 flex flex-col print-card">
         <div className="flex items-center mb-4">
-          <div className="p-3 bg-sky-100 rounded-full mr-4">
+          <div className="p-3 bg-sky-100 rounded-full mr-4 no-print">
             <Award className="h-6 w-6 text-sky-600" />
           </div>
           <h3 className="text-lg font-bold text-gray-800">คำแนะนำ</h3>
@@ -49,9 +49,9 @@ export function MetricsCards({
       </div>
 
       {/* Budget Card */}
-      <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200">
+      <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200 print-card">
         <div className="flex items-center mb-4">
-          <div className="p-3 bg-emerald-100 rounded-full mr-4">
+          <div className="p-3 bg-emerald-100 rounded-full mr-4 no-print">
             <Wallet className="h-6 w-6 text-emerald-600" />
           </div>
           <h3 className="text-lg font-bold text-gray-800">งบประมาณ</h3>
