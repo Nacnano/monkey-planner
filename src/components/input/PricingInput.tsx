@@ -1,5 +1,5 @@
 import React from "react";
-import { DollarSign } from "lucide-react";
+import { CircleDollarSign } from "lucide-react";
 
 interface PricingInputProps {
   pricePerSlot: number;
@@ -26,7 +26,7 @@ export function PricingInput({
         htmlFor="price"
         className="flex items-center text-sm font-medium text-gray-700 mb-1"
       >
-        <DollarSign className="h-4 w-4 mr-2 text-gray-400" />
+        <CircleDollarSign className="h-4 w-4 mr-2 text-gray-400" />
         ราคา/คาบเรียน*
       </label>
       <input

@@ -7,7 +7,7 @@ import { initialCourses } from "../data/initialData";
 import { StudentInfoInput } from "./input/StudentInfoInput";
 import { Modal } from "./Modal";
 import { AssumptionsCard } from "./AssumptionsCard";
-import { DollarSign, HelpCircle } from "lucide-react";
+import { CircleDollarSign, HelpCircle } from "lucide-react";
 
 interface InputFormProps {
   onCalculate: (data: FormData | null) => void;
@@ -41,6 +41,9 @@ export function InputForm({ onCalculate }: InputFormProps) {
         validationErrors.push(
           `คอร์ส "${c.name || `#${i + 1}`}" ต้องมีจำนวนชีทมากกว่า 0`
         );
+      if (c.examName && !c.examDate) {
+        validationErrors.push(`คอร์ส "${c.name}" มีชื่อการสอบแต่ไม่มีวันสอบ`);
+      }
     });
 
     setErrors(validationErrors);
@@ -119,7 +122,7 @@ export function InputForm({ onCalculate }: InputFormProps) {
           onClick={() => setIsPriceModalOpen(true)}
           className="flex-1 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 flex items-center justify-center p-2"
         >
-          <DollarSign className="h-4 w-4 mr-2" />
+          <CircleDollarSign className="h-4 w-4 mr-2" />
           ตั้งค่าราคา
         </button>
         <button
