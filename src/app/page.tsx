@@ -37,10 +37,12 @@ function App() {
 
         <div className="grid grid-cols-1 gap-12">
           {/* --- Input Section --- */}
-          <InputForm onCalculate={handleCalculate} />
+          <div id="input-section">
+            <InputForm onCalculate={handleCalculate} />
+          </div>
 
           {/* --- Divider --- */}
-          <div className="relative">
+          <div className="relative no-print">
             <div
               className="absolute inset-0 flex items-center"
               aria-hidden="true"
@@ -55,11 +57,11 @@ function App() {
           </div>
 
           {/* --- Results Section --- */}
-          <div>
+          <div id="results-section">
             {results ? (
               <ResultsDisplay results={results} />
             ) : (
-              <div className="flex flex-col items-center justify-center min-h-[300px] bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
+              <div className="no-print flex flex-col items-center justify-center min-h-[300px] bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
                 <div className="text-center">
                   <Target className="h-16 w-16 mx-auto text-gray-300 mb-4" />
                   <h2 className="text-2xl font-bold text-gray-800">
