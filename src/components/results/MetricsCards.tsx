@@ -17,13 +17,13 @@ export function MetricsCards({
   const { inputs, totalSheets, totalFee, recommendedPlan } = results;
   const finalGoalName =
     inputs.exams.find((e) => e.id === inputs.finalGoalExamId)?.name ||
-    "the final goal";
+    "เป้าหมายสุดท้าย";
 
   const recommendation = {
     slots: recommendedSlots,
     message: isFeasible
-      ? `This is the optimal pace to finish all coursework right on time for the '${finalGoalName}' deadline.`
-      : `The deadline for '${finalGoalName}' is not feasible.`,
+      ? `นี่คือจำนวนคาบเรียนที่เหมาะสมที่สุดเพื่อให้เรียนจบทุกคอร์สทันเวลาสำหรับ '${finalGoalName}'`
+      : `ไม่สามารถเรียนจบได้ทันตามกำหนดเวลาของ '${finalGoalName}'`,
   };
 
   return (
@@ -34,12 +34,12 @@ export function MetricsCards({
           <div className="p-3 bg-sky-100 rounded-full mr-4">
             <Award className="h-6 w-6 text-sky-600" />
           </div>
-          <h3 className="text-lg font-bold text-gray-800">Recommendation</h3>
+          <h3 className="text-lg font-bold text-gray-800">คำแนะนำ</h3>
         </div>
         <p className="text-5xl font-extrabold text-sky-600">
           {isFeasible ? recommendation.slots : "N/A"}
         </p>
-        <p className="text-lg font-medium text-gray-500 -mt-1">Slots/Week</p>
+        <p className="text-lg font-medium text-gray-500 -mt-1">คาบ/สัปดาห์</p>
         <p className="mt-4 text-gray-600 text-sm flex-grow">
           {recommendation.message}
         </p>
@@ -51,23 +51,23 @@ export function MetricsCards({
           <div className="p-3 bg-emerald-100 rounded-full mr-4">
             <Wallet className="h-6 w-6 text-emerald-600" />
           </div>
-          <h3 className="text-lg font-bold text-gray-800">Budget</h3>
+          <h3 className="text-lg font-bold text-gray-800">งบประมาณ</h3>
         </div>
         <div className="space-y-3">
           <div className="flex justify-between items-center">
-            <span className="text-gray-600">Total Sheets</span>
+            <span className="text-gray-600">จำนวนชีททั้งหมด</span>
             <p className="text-lg font-bold text-gray-800">
               {formatNumber(totalSheets)}
             </p>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-gray-600">Est. Monthly Cost</span>
+            <span className="text-gray-600">ค่าใช้จ่ายรายเดือน (ประมาณ)</span>
             <p className="text-lg font-bold text-gray-800">
               ฿{formatNumber(recommendedPlan.monthlyFee)}
             </p>
           </div>
           <div className="flex justify-between items-center border-t pt-3 mt-3">
-            <span className="text-gray-600 font-bold">Total Fee</span>
+            <span className="text-gray-600 font-bold">ค่าใช้จ่ายทั้งหมด</span>
             <p className="text-3xl font-extrabold text-emerald-600">
               ฿{formatNumber(totalFee)}
             </p>

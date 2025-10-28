@@ -16,7 +16,7 @@ export function DeadlineCountdownCard({ results }: DeadlineCountdownCardProps) {
         <div className="p-3 bg-amber-100 rounded-full mr-4">
           <Clock className="h-6 w-6 text-amber-600" />
         </div>
-        <h3 className="text-lg font-bold text-gray-800">Deadline Countdown</h3>
+        <h3 className="text-lg font-bold text-gray-800">นับถอยหลังถึงวันสอบ</h3>
       </div>
       <div className="space-y-4">
         {examDeadlines.map((deadline) => (
@@ -28,7 +28,7 @@ export function DeadlineCountdownCard({ results }: DeadlineCountdownCardProps) {
               <p className="font-bold text-gray-800 flex items-center text-base">
                 {deadline.examName}
                 {deadline.id === inputs.finalGoalExamId && (
-                  <span className="ml-2 text-amber-500" title="Final Goal">
+                  <span className="ml-2 text-amber-500" title="เป้าหมายสุดท้าย">
                     ⭐
                   </span>
                 )}
@@ -45,7 +45,7 @@ export function DeadlineCountdownCard({ results }: DeadlineCountdownCardProps) {
               <p className="text-2xl font-extrabold text-amber-600">
                 {formatNumber(deadline.daysRemaining)}
               </p>
-              <p className="text-xs text-gray-500 -mt-1">days remaining</p>
+              <p className="text-xs text-gray-500 -mt-1">วันที่เหลือ</p>
             </div>
           </div>
         ))}

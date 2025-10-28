@@ -31,12 +31,12 @@ export function ExamInput({
             htmlFor={`examName-${exam.id}`}
             className="text-xs font-medium text-gray-500"
           >
-            Exam Name*
+            ชื่อการสอบ*
           </label>
           <input
             type="text"
             id={`examName-${exam.id}`}
-            placeholder="e.g. Final Exam"
+            placeholder="เช่น สอบปลายภาค"
             value={exam.name}
             onChange={(e) => onUpdate(exam.id, { name: e.target.value })}
             required
@@ -50,7 +50,7 @@ export function ExamInput({
             htmlFor={`examDate-${exam.id}`}
             className="text-xs font-medium text-gray-500"
           >
-            Exam Date*
+            วันสอบ*
           </label>
           <input
             type="date"
@@ -89,7 +89,7 @@ export function ExamInput({
               isFinalGoal ? "text-sky-800 font-bold" : "text-gray-700"
             }`}
           >
-            Set as Final Goal for calculation
+            ตั้งเป็นเป้าหมายสุดท้ายสำหรับการคำนวณ
           </span>
         </label>
       </div>

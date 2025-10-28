@@ -13,7 +13,7 @@ export function PricingInput({
   return (
     <div>
       <div className="space-y-1 mb-4">
-        <h2 className="text-xl font-bold text-gray-800">Plan & Pricing</h2>
+        <h2 className="text-xl font-bold text-gray-800">แผนและราคา</h2>
         <p className="text-sm text-gray-500">
           กำหนดค่าใช้จ่ายและจำนวนครั้งที่เรียนต่อสัปดาห์
         </p>
@@ -23,7 +23,7 @@ export function PricingInput({
         className="flex items-center text-sm font-medium text-gray-700 mb-1"
       >
         <DollarSign className="h-4 w-4 mr-2 text-gray-400" />
-        Price/Slot*
+        ราคา/คาบเรียน*
       </label>
       <input
         type="number"

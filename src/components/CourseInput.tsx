@@ -60,12 +60,12 @@ export function CourseInput({
           htmlFor={`courseName-${course.id}`}
           className="text-xs font-medium text-gray-500"
         >
-          Course Name
+          ชื่อคอร์ส
         </label>
         <input
           type="text"
           id={`courseName-${course.id}`}
-          placeholder="e.g. ปรับพื้นฐาน"
+          placeholder="เช่น ปรับพื้นฐาน"
           value={course.name}
           onChange={(e) => onUpdate(course.id, { name: e.target.value })}
           required
@@ -78,7 +78,7 @@ export function CourseInput({
           htmlFor={`sheetCount-${course.id}`}
           className="text-xs font-medium text-gray-500"
         >
-          Sheets*
+          จำนวนชีท*
         </label>
         <input
           type="number"

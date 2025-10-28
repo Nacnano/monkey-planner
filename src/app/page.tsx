@@ -27,12 +27,12 @@ function App() {
           <div className="flex justify-center items-center gap-3">
             <BookOpen className="h-10 w-10 text-sky-600" />
             <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
-              Course & Budget Planner
+              เครื่องมือวางแผนคอร์สเรียนและงบประมาณ
             </h1>
           </div>
           <p className="mt-3 text-lg text-gray-600 max-w-2xl mx-auto">
-            Instantly calculate your study plan to ensure you reach your goals
-            on time and on budget.
+            คำนวณแผนการเรียนของคุณได้ทันที
+            เพื่อให้แน่ใจว่าคุณจะบรรลุเป้าหมายได้ทันเวลาและอยู่ในงบประมาณ
           </p>
         </header>
 
@@ -52,11 +52,10 @@ function App() {
                 <div className="text-center">
                   <Target className="h-20 w-20 mx-auto text-gray-300 mb-4" />
                   <h2 className="text-2xl font-bold text-gray-800">
-                    Your Plan Awaits
+                    แผนการเรียนของคุณ
                   </h2>
                   <p className="mt-2 text-gray-500 max-w-sm mx-auto">
-                    Fill in your courses and deadlines on the left to see your
-                    personalized study plan.
+                    กรอกข้อมูลคอร์สเรียนและกำหนดเวลาสอบทางด้านซ้ายเพื่อดูแผนการเรียนส่วนตัวของคุณ
                   </p>
                 </div>
               </div>
@@ -66,8 +65,8 @@ function App() {
 
         <footer className="text-center mt-16 text-sm text-gray-500">
           <p>
-            &copy; {new Date().getFullYear()} Course Planner. Built for clarity
-            and confidence.
+            &copy; {new Date().getFullYear()} Course Planner.
+            สร้างขึ้นเพื่อความชัดเจนและความมั่นใจ
           </p>
         </footer>
       </main>

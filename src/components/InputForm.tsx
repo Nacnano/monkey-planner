@@ -26,30 +26,31 @@ export function InputForm({ onCalculate }: InputFormProps) {
   useEffect(() => {
     const validationErrors: string[] = [];
     if (!pricePerSlot || pricePerSlot <= 0)
-      validationErrors.push("Price/Slot must be greater than 0.");
+      validationErrors.push("ราคาต่อคาบเรียนต้องมากกว่า 0");
     courses.forEach((c, i) => {
       if (!c.name.trim())
-        validationErrors.push(`Course #${i + 1} needs a name.`);
+        validationErrors.push(`คอร์สเรียน #${i + 1} ต้องมีชื่อ`);
       if (!c.sheetCount || c.sheetCount <= 0)
         validationErrors.push(
-          `Course "${
-            c.name || `#${i + 1}`
-          }" needs a sheet count greater than 0.`
+          `คอร์ส "${c.name || `#${i + 1}`}" ต้องมีจำนวนชีทมากกว่า 0`
         );
     });
     exams.forEach((ex, i) => {
-      if (!ex.name.trim())
-        validationErrors.push(`Exam #${i + 1} needs a name.`);
+      if (!ex.name.trim()) validationErrors.push(`การสอบ #${i + 1} ต้องมีชื่อ`);
       if (!ex.date)
-        validationErrors.push(`Exam "${ex.name || `#${i + 1}`}" needs a date.`);
+        validationErrors.push(
+          `การสอบ "${ex.name || `#${i + 1}`}" ต้องมีวันสอบ`
+        );
     });
     if (exams.length > 0 && !finalGoalExamId)
-      validationErrors.push("A Final Goal exam must be selected.");
+      validationErrors.push("ต้องเลือกการสอบที่เป็นเป้าหมายสุดท้าย");
 
     setErrors(validationErrors);
 
     if (validationErrors.length === 0) {
       stableOnCalculate({ courses, exams, pricePerSlot, finalGoalExamId });
+    } else {
+      stableOnCalculate(null);
     }
   }, [pricePerSlot, courses, exams, finalGoalExamId, stableOnCalculate]);
 

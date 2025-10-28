@@ -24,7 +24,7 @@ export function ExamList({
     <div>
       <div className="space-y-1">
         <h2 className="text-xl font-bold text-gray-800">
-          Exams & Deadlines (วันสอบ)
+          วันสอบและกำหนดเวลา (Exams & Deadlines)
         </h2>
         <p className="text-sm text-gray-500">
           กำหนดวันสอบและเลือกเป้าหมายหลักในการคำนวณ
@@ -48,7 +48,7 @@ export function ExamList({
         className="w-full flex items-center justify-center p-2 mt-4 text-sm text-amber-700 font-semibold bg-amber-100 hover:bg-amber-200 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
       >
         <CalendarCheck className="h-5 w-5 mr-2" />
-        Add Exam
+        เพิ่มวันสอบ
       </button>
     </div>
   );

@@ -40,7 +40,7 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
     const total = payload.reduce((sum, entry) => sum + (entry.value || 0), 0);
     return (
       <div className="p-3 bg-white border border-gray-200 rounded-lg shadow-xl text-sm">
-        <p className="font-bold text-gray-800 mb-2">{`Slots/Week: ${label}`}</p>
+        <p className="font-bold text-gray-800 mb-2">{`คาบ/สัปดาห์: ${label}`}</p>
         <ul className="list-none p-0 space-y-1">
           {payload.map((entry, index) => (
             <li
@@ -50,14 +50,14 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
             >
               <span className="font-medium">{entry.name}:</span>
               <span className="font-bold ml-4">
-                {formatNumber(entry.value || 0, 1)} days
+                {formatNumber(entry.value || 0, 1)} วัน
               </span>
             </li>
           ))}
         </ul>
         <p className="font-extrabold text-gray-900 border-t border-gray-200 mt-2 pt-2 flex justify-between">
-          <span>Total:</span>
-          <span>{formatNumber(total, 1)} days</span>
+          <span>รวม:</span>
+          <span>{formatNumber(total, 1)} วัน</span>
         </p>
       </div>
     );
@@ -161,11 +161,11 @@ export function TimelineChart({
       <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
         <h3 className="flex items-center text-xl font-bold text-gray-800">
           <BarChart2 className="h-6 w-6 mr-3 text-violet-500" />
-          Timeline Visualization
+          ภาพรวมแผนการเรียน
         </h3>
         <div className="flex items-center gap-2 sm:gap-4 text-sm">
           <label htmlFor="minSlots" className="font-medium text-gray-600">
-            Slot Range:
+            ช่วงคาบเรียน:
           </label>
           <input
             type="number"
@@ -176,7 +176,7 @@ export function TimelineChart({
             }
             min="1"
             className="w-16 p-1 text-center bg-gray-100 border border-gray-300 rounded-md focus:ring-sky-500 focus:border-sky-500"
-            aria-label="Minimum slots per week"
+            aria-label="จำนวนคาบเรียนขั้นต่ำต่อสัปดาห์"
           />
           <span className="text-gray-400">-</span>
           <input
@@ -186,7 +186,7 @@ export function TimelineChart({
             onChange={(e) => setMaxSlotRange(Number(e.target.value))}
             min={minSlotRange + 1}
             className="w-16 p-1 text-center bg-gray-100 border border-gray-300 rounded-md focus:ring-sky-500 focus:border-sky-500"
-            aria-label="Maximum slots per week"
+            aria-label="จำนวนคาบเรียนสูงสุดต่อสัปดาห์"
           />
         </div>
       </div>
@@ -211,7 +211,7 @@ export function TimelineChart({
                   Math.ceil(Math.max(dataMax || 0, maxDeadlineDays) * 1.1),
               ]}
               label={{
-                value: "Days to Finish",
+                value: "จำนวนวันที่ต้องใช้",
                 position: "insideBottom",
                 offset: -5,
                 fill: "#6b7280",
@@ -239,7 +239,7 @@ export function TimelineChart({
               type="category"
               dataKey="slotsPerWeek"
               label={{
-                value: "Slots per Week",
+                value: "คาบเรียนต่อสัปดาห์",
                 angle: -90,
                 position: "insideLeft",
                 fill: "#6b7280",
