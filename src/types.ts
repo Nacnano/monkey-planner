@@ -26,6 +26,7 @@ export interface TimelineAnalysis {
   slotsPerWeek: number;
   weeksToFinish: number;
   daysToFinish: number;
+  monthsToFinish: number;
   isSuccess: boolean;
   monthlyFee: number;
   courseBreakdown: CourseBreakdown[];

@@ -34,7 +34,7 @@ export function ScenariosTable({
                 คาบ / สัปดาห์
               </th>
               <th scope="col" className="px-6 py-3">
-                จำนวนวันทั้งหมดที่ใช้เรียน
+                จำนวนเดือนทั้งหมดที่ใช้เรียน
               </th>
               <th scope="col" className="px-6 py-3">
                 บรรลุเป้าหมายสุดท้าย?
@@ -57,8 +57,8 @@ export function ScenariosTable({
                   {s.slotsPerWeek}
                 </th>
                 <td className="px-6 py-4">
-                  {isFinite(s.daysToFinish)
-                    ? formatNumber(s.daysToFinish, 1)
+                  {isFinite(s.monthsToFinish)
+                    ? formatNumber(s.monthsToFinish, 1)
                     : "N/A"}
                 </td>
                 <td className="px-6 py-4">

@@ -64,6 +64,7 @@ export const calculatePlan = (data: FormData): CalculationResults => {
         slotsPerWeek: slots,
         weeksToFinish: Infinity,
         daysToFinish: Infinity,
+        monthsToFinish: Infinity,
         isSuccess: false,
         monthlyFee: 0,
         courseBreakdown: [],
@@ -71,6 +72,7 @@ export const calculatePlan = (data: FormData): CalculationResults => {
     }
     const weeksToFinish = totalSheets / slots;
     const daysToFinish = weeksToFinish * 7;
+    const monthsToFinish = daysToFinish / 30;
 
     const targetDeadline = finalGoalDeadline || earliestDeadline;
     const isSuccess = targetDeadline
@@ -88,6 +90,7 @@ export const calculatePlan = (data: FormData): CalculationResults => {
       slotsPerWeek: slots,
       weeksToFinish,
       daysToFinish,
+      monthsToFinish,
       isSuccess,
       monthlyFee,
       courseBreakdown,
