@@ -40,7 +40,7 @@ export function StudentInfoInput({
             id="studentNickname"
             value={studentNickname}
             onChange={(e) => setStudentNickname(e.target.value)}
-            placeholder="เช่น น้องแทน"
+            placeholder="แน็ค"
             required
             className="w-full p-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-sky-500 focus:border-sky-500"
           />
@@ -58,7 +58,7 @@ export function StudentInfoInput({
             id="studentName"
             value={studentName}
             onChange={(e) => setStudentName(e.target.value)}
-            placeholder="เช่น เด็กชายโชติพิสิฐ"
+            placeholder="โชติพิสิฐ"
             className="w-full p-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-sky-500 focus:border-sky-500"
           />
         </div>
@@ -75,7 +75,7 @@ export function StudentInfoInput({
             id="studentGoal"
             value={studentGoal}
             onChange={(e) => setStudentGoal(e.target.value)}
-            placeholder="เช่น สอบติด MWITS"
+            placeholder="สอบติดมหาลัย"
             className="w-full p-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-sky-500 focus:border-sky-500"
           />
         </div>
