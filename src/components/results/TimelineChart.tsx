@@ -27,7 +27,6 @@ const COURSE_COLORS = [
   "#f59e0b",
   "#14b8a6",
 ];
-const DEADLINE_COLORS = ["#ef4444", "#d946ef", "#0891b2", "#84cc16"];
 
 interface CustomTooltipProps {
   active?: boolean;
@@ -169,6 +168,15 @@ export function TimelineChart({ results }: TimelineChartProps) {
     ...examDeadlines.map((d) => d.daysRemaining)
   );
 
+  // Helper function to get course color by course ID
+  const getCourseColor = (courseId: string | null) => {
+    if (!courseId) return "#ef4444"; // Default red for deadlines without course
+    const courseIndex = courses.findIndex((c) => c.id === courseId);
+    return courseIndex >= 0
+      ? COURSE_COLORS[courseIndex % COURSE_COLORS.length]
+      : "#ef4444"; // Default red if course not found
+  };
+
   // Create custom legend payload with courses in order (left-to-right matches top-to-bottom in course list), then deadlines
   const legendPayload = [
     ...courses.map((course, index) => ({
@@ -177,11 +185,10 @@ export function TimelineChart({ results }: TimelineChartProps) {
       type: "square" as const,
       id: course.id, // Include ID to help with tracking
     })),
-    ...examDeadlines.map((deadline, index) => {
+    ...examDeadlines.map((deadline) => {
       const isFinalGoal = deadline.id === finalGoalCourseId;
-      const color = isFinalGoal
-        ? "#f59e0b"
-        : DEADLINE_COLORS[index % DEADLINE_COLORS.length];
+      const color = "#ef4444"; // All deadline lines are red
+
       return {
         value: `${deadline.examName} (${formatDate(deadline.date, {
           day: "numeric",
@@ -289,6 +296,7 @@ export function TimelineChart({ results }: TimelineChartProps) {
               width={80}
               stroke="#9ca3af"
               tick={{ fill: "#6b7280", fontSize: 12 }}
+              ticks={[1, 2, 3, 4, 5, 6, 7]}
             />
             <Tooltip
               content={<CustomTooltip />}
@@ -309,17 +317,15 @@ export function TimelineChart({ results }: TimelineChartProps) {
               />
             ))}
 
-            {examDeadlines.map((deadline, index) => {
+            {examDeadlines.map((deadline) => {
               const isFinalGoal = deadline.id === finalGoalCourseId;
-              const color = isFinalGoal
-                ? "#f59e0b"
-                : DEADLINE_COLORS[index % DEADLINE_COLORS.length];
+              const labelColor = getCourseColor(deadline.id); // deadline.id is the course ID
 
               return (
                 <ReferenceLine
                   key={deadline.id}
                   x={deadline.daysRemaining}
-                  stroke={color}
+                  stroke="#ef4444" // All deadline lines are red
                   strokeDasharray={isFinalGoal ? "3 3" : "4 4"}
                   strokeWidth={isFinalGoal ? 3 : 2}
                   label={
@@ -328,8 +334,8 @@ export function TimelineChart({ results }: TimelineChartProps) {
                         deadline.date,
                         { day: "numeric", month: "short" }
                       )})`}
-                      dy={-(45 + (index % 3) * 25)}
-                      fill={color}
+                      dy={-(45 + (examDeadlines.indexOf(deadline) % 3) * 25)}
+                      fill={labelColor} // Label color matches course color
                       isFinalGoal={isFinalGoal}
                     />
                   }
