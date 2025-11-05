@@ -25,7 +25,7 @@ export function MetricsCards({
   const recommendation = {
     slots: recommendedSlots,
     message: isFeasible
-      ? `นี่คือจำนวนคาบเรียนที่เหมาะสมที่สุดเพื่อให้เรียนจบทุกคอร์สทันเวลาสำหรับ '${finalGoalName}'`
+      ? `เหมาะสมที่สุดเพื่อให้เรียนจบทุกคอร์สทันเวลาสำหรับ '${finalGoalName}'`
       : `ไม่สามารถเรียนจบได้ทันตามกำหนดเวลาของ '${finalGoalName}'`,
   };
 
@@ -42,7 +42,9 @@ export function MetricsCards({
         <p className="text-5xl font-extrabold text-sky-600">
           {isFeasible ? recommendation.slots : "N/A"}
         </p>
-        <p className="text-lg font-medium text-gray-500 -mt-1">คาบ/สัปดาห์</p>
+        <p className="text-lg font-medium text-gray-500 -mt-1">
+          Slot / สัปดาห์
+        </p>
         <p className="mt-4 text-gray-600 text-sm flex-grow">
           {recommendation.message}
         </p>

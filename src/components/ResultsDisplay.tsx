@@ -33,7 +33,7 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
             </div>
             <div>
               <h2 className="text-2xl font-bold text-gray-800">
-                แผนการเรียนสำหรับ {studentDisplayName}
+                ผลลัพธ์การคำนวณสำหรับ {studentDisplayName}
               </h2>
               <div className="mt-1">
                 {studentGoal && (
@@ -53,7 +53,7 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
             className="no-print flex items-center gap-2 px-4 py-2 text-sm font-semibold text-sky-700 bg-sky-100 hover:bg-sky-200 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"
           >
             <Printer className="h-4 w-4" />
-            พิมพ์แผนการเรียน
+            พิมพ์ผลลัพธ์
           </button>
         </div>
       </div>

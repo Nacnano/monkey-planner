@@ -16,7 +16,9 @@ export function DeadlineCountdownCard({ results }: DeadlineCountdownCardProps) {
         <div className="p-3 bg-amber-100 rounded-full mr-4 no-print">
           <Clock className="h-6 w-6 text-amber-600" />
         </div>
-        <h3 className="text-lg font-bold text-gray-800">นับถอยหลังถึงวันสอบ</h3>
+        <h3 className="text-lg font-bold text-gray-800">
+          นับถอยหลังถึงเดดไลน์
+        </h3>
       </div>
       <div className="space-y-4">
         {examDeadlines.map((deadline) => (

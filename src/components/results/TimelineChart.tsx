@@ -40,7 +40,7 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
     const total = payload.reduce((sum, entry) => sum + (entry.value || 0), 0);
     return (
       <div className="p-3 bg-white border border-gray-200 rounded-lg shadow-xl text-sm">
-        <p className="font-bold text-gray-800 mb-2">{`คาบ/สัปดาห์: ${label}`}</p>
+        <p className="font-bold text-gray-800 mb-2">{`Slot / สัปดาห์: ${label}`}</p>
         <ul className="list-none p-0 space-y-1">
           {payload.map((entry, index) => (
             <li
@@ -197,10 +197,12 @@ export function TimelineChart({ results }: TimelineChartProps) {
   return (
     <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200 print-card">
       <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-        <h3 className="flex items-center text-xl font-bold text-gray-800">
-          <BarChart2 className="h-6 w-6 mr-3 text-violet-500 no-print" />
-          ภาพรวมแผนการเรียน
-        </h3>
+        <div>
+          <h3 className="flex items-center text-xl font-bold text-gray-800">
+            <BarChart2 className="h-6 w-6 mr-3 text-violet-500 no-print" />
+            ต้องเรียนกี่ Slot ถึงจะทันเดดไลน์ ?
+          </h3>
+        </div>
         <div className="flex items-center gap-2 sm:gap-4 text-sm no-print">
           <label htmlFor="minSlots" className="font-medium text-gray-600">
             ช่วงคาบเรียน:
@@ -251,7 +253,7 @@ export function TimelineChart({ results }: TimelineChartProps) {
                   Math.ceil(Math.max(dataMax || 0, maxDeadlineDays) * 1.1),
               ]}
               label={{
-                value: "จำนวนวันที่ต้องใช้",
+                value: "จำนวนวัน",
                 position: "insideBottom",
                 offset: -5,
                 fill: "#6b7280",
@@ -279,7 +281,7 @@ export function TimelineChart({ results }: TimelineChartProps) {
               type="category"
               dataKey="slotsPerWeek"
               label={{
-                value: "คาบเรียนต่อสัปดาห์",
+                value: "จำนวน Slot / สัปดาห์",
                 angle: -90,
                 position: "insideLeft",
                 fill: "#6b7280",

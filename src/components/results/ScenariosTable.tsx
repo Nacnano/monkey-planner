@@ -24,16 +24,18 @@ export function ScenariosTable({
 
   return (
     <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200 print-card">
-      <h3 className="flex items-center text-xl font-bold text-gray-800 mb-4">
-        <CalendarDays className="h-6 w-6 mr-3 text-indigo-500 no-print" />
-        สถานการณ์และรายละเอียดของแผน
-      </h3>
+      <div className="mb-4">
+        <h3 className="flex items-center text-xl font-bold text-gray-800">
+          <CalendarDays className="h-6 w-6 mr-3 text-indigo-500 no-print" />
+          รายละเอียดจำนวน Slot และค่าเรียน / เดือน
+        </h3>
+      </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm text-left text-gray-500">
           <thead className="text-xs text-gray-700 uppercase bg-gray-100">
             <tr>
               <th scope="col" className="px-6 py-3 rounded-l-lg">
-                คาบ / สัปดาห์
+                Slot / สัปดาห์
               </th>
               <th scope="col" className="px-6 py-3">
                 จำนวนเดือนทั้งหมดที่ใช้เรียน
@@ -51,6 +53,7 @@ export function ScenariosTable({
                       {formatDate(deadline.date, {
                         day: "numeric",
                         month: "short",
+                        year: "numeric",
                       })}
                       )
                     </span>
@@ -58,7 +61,7 @@ export function ScenariosTable({
                 </th>
               ))}
               <th scope="col" className="px-6 py-3">
-                บรรลุเป้าหมายสุดท้าย?
+                บรรลุทุกเป้าหมาย?
               </th>
               <th scope="col" className="px-6 py-3 rounded-r-lg">
                 ค่าเรียน / เดือน
