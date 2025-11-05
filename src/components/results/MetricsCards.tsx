@@ -60,9 +60,9 @@ export function MetricsCards({
         </div>
         <div className="space-y-3">
           <div className="flex justify-between items-center">
-            <span className="text-gray-600">จำนวนชีททั้งหมด</span>
+            <span className="text-gray-600">จำนวนเดือน</span>
             <p className="text-lg font-bold text-gray-800">
-              {formatNumber(totalSheets)}
+              {formatNumber(recommendedPlan.monthsToFinish)}
             </p>
           </div>
           <div className="flex justify-between items-center">
