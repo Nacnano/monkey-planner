@@ -37,9 +37,6 @@ export function ScenariosTable({
               <th scope="col" className="px-6 py-3 rounded-l-lg">
                 Slot / สัปดาห์
               </th>
-              <th scope="col" className="px-6 py-3">
-                จำนวนเดือนทั้งหมดที่ใช้เรียน
-              </th>
               {examDeadlines.map((deadline) => (
                 <th
                   key={deadline.id}
@@ -63,6 +60,9 @@ export function ScenariosTable({
               <th scope="col" className="px-6 py-3">
                 บรรลุทุกเป้าหมาย?
               </th>
+              <th scope="col" className="px-6 py-3">
+                จำนวนเดือนทั้งหมดที่ใช้เรียน
+              </th>
               <th scope="col" className="px-6 py-3 rounded-r-lg">
                 ค่าเรียน / เดือน
               </th>
@@ -80,11 +80,6 @@ export function ScenariosTable({
                 <th scope="row" className="px-6 py-4 whitespace-nowrap">
                   {s.slotsPerWeek}
                 </th>
-                <td className="px-6 py-4">
-                  {isFinite(s.monthsToFinish)
-                    ? formatNumber(s.monthsToFinish, 1)
-                    : "N/A"}
-                </td>
                 {examDeadlines.map((deadline) => {
                   const successStatus = s.deadlineSuccess.find(
                     (ds) => ds.deadlineId === deadline.id
@@ -144,6 +139,11 @@ export function ScenariosTable({
                       ไม่
                     </span>
                   )}
+                </td>
+                <td className="px-6 py-4">
+                  {isFinite(s.monthsToFinish)
+                    ? formatNumber(s.monthsToFinish, 1)
+                    : "N/A"}
                 </td>
                 <td className="px-6 py-4">฿{formatNumber(s.monthlyFee)}</td>
               </tr>
