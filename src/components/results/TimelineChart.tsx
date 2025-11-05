@@ -135,7 +135,10 @@ export function TimelineChart({ results }: TimelineChartProps) {
     return scenarioData;
   });
 
+  // Get courses in the order they appear in inputs (which reflects drag-drop order)
   const courses = results.inputs.courses;
+  // Create a key based on course order to force chart re-render when order changes
+  const courseOrderKey = courses.map((c) => c.id).join("-");
   const maxDeadlineDays = Math.max(
     0,
     ...examDeadlines.map((d) => d.daysRemaining)
@@ -178,7 +181,7 @@ export function TimelineChart({ results }: TimelineChartProps) {
         </div>
       </div>
       <div className="w-full h-96">
-        <ResponsiveContainer>
+        <ResponsiveContainer key={courseOrderKey}>
           <BarChart
             layout="vertical"
             data={chartData}
@@ -246,7 +249,7 @@ export function TimelineChart({ results }: TimelineChartProps) {
 
             {courses.map((course, index) => (
               <Bar
-                key={course.id}
+                key={`${course.id}-${index}`}
                 dataKey={course.name}
                 stackId="a"
                 name={course.name}

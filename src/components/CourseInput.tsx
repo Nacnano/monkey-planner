@@ -25,18 +25,6 @@ export function CourseInput({
 
   return (
     <div
-      draggable
-      onDragStart={(e) => {
-        if ((e.target as HTMLElement).closest(".drag-handle")) {
-          onDragStart(course.id);
-        } else {
-          e.preventDefault();
-        }
-      }}
-      onDragEnd={() => {
-        setIsDragOver(false);
-        onDragEnd();
-      }}
       onDragOver={(e) => {
         e.preventDefault();
         setIsDragOver(true);
@@ -57,7 +45,15 @@ export function CourseInput({
     >
       <div className="flex flex-wrap items-end gap-x-4 gap-y-3">
         {/* Drag Handle */}
-        <div className="flex-shrink-0 self-center text-gray-400 cursor-grab drag-handle">
+        <div
+          draggable
+          onDragStart={() => onDragStart(course.id)}
+          onDragEnd={() => {
+            setIsDragOver(false);
+            onDragEnd();
+          }}
+          className="flex-shrink-0 self-center text-gray-400 cursor-grab active:cursor-grabbing hover:text-gray-600"
+        >
           <GripVertical className="h-5 w-5" />
         </div>
 
