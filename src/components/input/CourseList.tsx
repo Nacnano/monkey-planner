@@ -30,9 +30,6 @@ export function CourseList({
         <h2 className="text-xl font-bold text-gray-800">
           คอร์สเรียนและกำหนดเวลา (Courses & Deadlines)
         </h2>
-        <p className="text-sm text-gray-500">
-          ระบุคอร์ส, จำนวนชีท, และกำหนดเวลา (ถ้ามี)
-        </p>
       </div>
       <div className="space-y-3 mt-4">
         {courses.map((course) => (

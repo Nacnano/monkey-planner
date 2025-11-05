@@ -19,8 +19,9 @@ const prompt = Prompt({
 });
 
 export const metadata: Metadata = {
-  title: "เครื่องมือวางแผนคอร์สเรียนและงบประมาณ",
-  description: "A study plan and budget calculator for students.",
+  title: "เครื่องมือคำนวณจำนวน Slot และงบประมาณ",
+  description:
+    "คำนวณจำนวน Slot และงบประมาณตามแผนการเรียนของนักเรียน เพื่อให้แน่ใจว่า นักเรียนจะบรรลุเป้าหมายได้ทันในงบที่จำกัด",
   // Note: Next.js handles charset and viewport meta tags automatically.
   // To add the icon, place a "favicon.ico" or "icon.svg"
   // (renamed from vite.svg) in your "app/" directory.

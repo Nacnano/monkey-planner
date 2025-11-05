@@ -26,12 +26,12 @@ function App() {
           <div className="flex justify-center items-center gap-3">
             <BookOpen className="h-10 w-10 text-sky-600" />
             <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
-              เครื่องมือวางแผนคอร์สเรียนและงบประมาณ
+              เครื่องมือคำนวณจำนวน Slot และงบประมาณ
             </h1>
           </div>
           <p className="mt-3 text-lg text-gray-600 max-w-2xl mx-auto">
-            คำนวณแผนการเรียนของคุณได้ทันที
-            เพื่อให้แน่ใจว่าคุณจะบรรลุเป้าหมายได้ทันเวลาและอยู่ในงบประมาณ
+            คำนวณจำนวน Slot และงบประมาณตามแผนการเรียนของนักเรียน
+            เพื่อให้แน่ใจว่า นักเรียนจะบรรลุเป้าหมายได้ทันในงบที่จำกัด
           </p>
         </header>
 

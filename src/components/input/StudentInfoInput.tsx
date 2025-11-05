@@ -22,9 +22,6 @@ export function StudentInfoInput({
     <div>
       <div className="space-y-1 mb-4">
         <h2 className="text-xl font-bold text-gray-800">ข้อมูลนักเรียน</h2>
-        <p className="text-sm text-gray-500">
-          ระบุข้อมูลเพื่อปรับแผนการเรียนให้เป็นส่วนตัว
-        </p>
       </div>
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex-1">
