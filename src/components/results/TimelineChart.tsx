@@ -108,6 +108,31 @@ const DeadlineLabelWithArrow = (props: DeadlineLabelProps) => {
   );
 };
 
+interface CustomLegendProps {
+  payload?: Array<{ value: string; color: string; type: string; id?: string }>;
+}
+
+const CustomLegend = ({ payload }: CustomLegendProps) => {
+  if (!payload) return null;
+
+  return (
+    <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mt-4">
+      {payload.map((entry, index) => (
+        <div
+          key={entry.id || `legend-${index}`}
+          className="flex items-center gap-2"
+        >
+          <div
+            className="w-4 h-4 rounded"
+            style={{ backgroundColor: entry.color }}
+          />
+          <span className="text-sm text-gray-700">{entry.value}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 interface TimelineChartProps {
   results: CalculationResults;
   recommendedSlots: number;
@@ -143,6 +168,31 @@ export function TimelineChart({ results }: TimelineChartProps) {
     0,
     ...examDeadlines.map((d) => d.daysRemaining)
   );
+
+  // Create custom legend payload with courses in order (left-to-right matches top-to-bottom in course list), then deadlines
+  const legendPayload = [
+    ...courses.map((course, index) => ({
+      value: course.name,
+      color: COURSE_COLORS[index % COURSE_COLORS.length],
+      type: "square" as const,
+      id: course.id, // Include ID to help with tracking
+    })),
+    ...examDeadlines.map((deadline, index) => {
+      const isFinalGoal = deadline.id === finalGoalCourseId;
+      const color = isFinalGoal
+        ? "#f59e0b"
+        : DEADLINE_COLORS[index % DEADLINE_COLORS.length];
+      return {
+        value: `${deadline.examName} (${formatDate(deadline.date, {
+          day: "numeric",
+          month: "short",
+        })})${isFinalGoal ? " ⭐" : ""}`,
+        color: color,
+        type: "line" as const,
+        id: deadline.id,
+      };
+    }),
+  ];
 
   return (
     <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200 print-card">
@@ -243,7 +293,7 @@ export function TimelineChart({ results }: TimelineChartProps) {
               cursor={{ fill: "rgba(241, 245, 249, 0.7)" }}
             />
             <Legend
-              verticalAlign="bottom"
+              content={<CustomLegend payload={legendPayload} />}
               wrapperStyle={{ paddingTop: "2rem" }}
             />
 
