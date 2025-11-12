@@ -19,13 +19,14 @@ import {
 } from "../../utils/formatters";
 
 const COURSE_COLORS = [
-  "#0ea5e9",
-  "#10b981",
-  "#a855f7",
-  "#f97316",
-  "#ec4899",
+  "#72aef7",
+  "#a78bfa",
+  "#6366f1",
+  "#06b6d4",
+  "#fbbf24",
+  "#fca5a5",
   "#f59e0b",
-  "#14b8a6",
+
 ];
 
 interface CustomTooltipProps {
@@ -178,14 +179,14 @@ export function TimelineChart({ results }: TimelineChartProps) {
   };
 
   // Create custom legend payload with courses in order (left-to-right matches top-to-bottom in course list), then deadlines
-  const legendPayload = [
-    ...courses.map((course, index) => ({
-      value: course.name,
-      color: COURSE_COLORS[index % COURSE_COLORS.length],
-      type: "square" as const,
-      id: course.id, // Include ID to help with tracking
-    })),
-    ...examDeadlines.map((deadline) => {
+  const legendPayload = courses.map((course, index) => ({
+    value: course.name,
+    color: COURSE_COLORS[index % COURSE_COLORS.length],
+    type: "square" as const,
+    id: course.id,
+  }));
+
+    examDeadlines.map((deadline) => {
       const isFinalGoal = deadline.id === finalGoalCourseId;
       const color = "#ef4444"; // All deadline lines are red
 
@@ -198,8 +199,7 @@ export function TimelineChart({ results }: TimelineChartProps) {
         type: "line" as const,
         id: deadline.id,
       };
-    }),
-  ];
+    });
 
   return (
     <div className="p-6 bg-white rounded-2xl shadow-lg border border-gray-200 print-card">
@@ -239,8 +239,8 @@ export function TimelineChart({ results }: TimelineChartProps) {
           />
         </div>
       </div>
-      <div className="w-full h-96">
-        <ResponsiveContainer key={courseOrderKey}>
+      <div className="w-full">
+  <ResponsiveContainer key={courseOrderKey} height={400}>
           <BarChart
             layout="vertical"
             data={chartData}
@@ -302,10 +302,10 @@ export function TimelineChart({ results }: TimelineChartProps) {
               content={<CustomTooltip />}
               cursor={{ fill: "rgba(241, 245, 249, 0.7)" }}
             />
-            <Legend
+            {/* <Legend
               content={<CustomLegend payload={legendPayload} />}
               wrapperStyle={{ paddingTop: "2rem" }}
-            />
+            /> */}
 
             {courses.map((course, index) => (
               <Bar
@@ -344,6 +344,9 @@ export function TimelineChart({ results }: TimelineChartProps) {
             })}
           </BarChart>
         </ResponsiveContainer>
+        <div className="mt-4">
+          <CustomLegend payload={legendPayload} />
+        </div>
       </div>
     </div>
   );
