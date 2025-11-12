@@ -25,8 +25,8 @@ export function MetricsCards({
   const recommendation = {
     slots: recommendedSlots,
     message: isFeasible
-      ? `เหมาะสมที่สุดเพื่อให้เรียนจบทุกคอร์สทันเวลาสำหรับ '${finalGoalName}'`
-      : `ไม่สามารถเรียนจบได้ทันตามกำหนดเวลาของ '${finalGoalName}'`,
+      ? `เหมาะสมที่สุด จบทุกคอร์ส ทันเวลา สำหรับ '${finalGoalName}'`
+      : `ไม่สามารถเรียนจบได้ทันตาม '${finalGoalName}'`,
   };
 
   return (
@@ -63,7 +63,7 @@ export function MetricsCards({
           <div className="p-2 bg-emerald-500 rounded-lg mr-3 no-print">
             <Wallet className="h-5 w-5 text-white" />
           </div>
-          <h3 className="text-base font-bold text-gray-800">งบประมาณ</h3>
+          <h3 className="text-base font-bold text-gray-800">ค่าเรียน</h3>
         </div>
         <div className="space-y-2.5">
           <div className="flex justify-between items-center p-2.5 bg-white rounded-lg shadow-sm">
