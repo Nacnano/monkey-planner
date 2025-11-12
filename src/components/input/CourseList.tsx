@@ -28,7 +28,7 @@ export function CourseList({
     <div>
       <div className="space-y-1">
         <h2 className="text-xl font-bold text-gray-800">
-          คอร์สเรียนและกำหนดเวลา (Courses & Deadlines)
+        คอร์สเรียนและเดดไลน์
         </h2>
       </div>
       <div className="space-y-3 mt-4">

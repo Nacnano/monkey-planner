@@ -26,11 +26,10 @@ function App() {
           <div className="flex justify-center items-center gap-3">
             <BookOpen className="h-10 w-10 text-sky-600" />
             <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
-              เครื่องมือคำนวณจำนวน Slot และงบประมาณ
+              เครื่องมือคำนวณจำนวน Slot และค่าเรียน
             </h1>
           </div>
           <p className="mt-3 text-lg text-gray-600 max-w-2xl mx-auto">
-            คำนวณจำนวน Slot และงบประมาณตามแผนการเรียนของนักเรียน
             เพื่อให้แน่ใจว่า นักเรียนจะบรรลุเป้าหมายได้ทันในงบที่จำกัด
           </p>
         </header>
@@ -65,10 +64,10 @@ function App() {
                 <div className="text-center">
                   <Target className="h-16 w-16 mx-auto text-gray-300 mb-4" />
                   <h2 className="text-2xl font-bold text-gray-800">
-                    แผนการเรียนของคุณ
+                    ผลลัพธ์การคำนวณของคุณ
                   </h2>
                   <p className="mt-2 text-gray-500 max-w-sm mx-auto">
-                    กรอกข้อมูลคอร์สเรียนและกำหนดเวลาสอบด้านบนเพื่อดูแผนการเรียนส่วนตัวของคุณ
+                    กรอกข้อมูลคอร์สเรียนและกำหนดเวลาด้านบนเพื่อคำนวณเวลาและค่าเรียนของคุณ
                   </p>
                 </div>
               </div>

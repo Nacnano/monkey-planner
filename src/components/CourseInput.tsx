@@ -43,8 +43,8 @@ export function CourseInput({
           : "bg-white border-gray-200"
       }`}
     >
-      <div className="flex flex-wrap items-end gap-x-4 gap-y-3">
-        {/* Drag Handle */}
+       <div className="flex flex-wrap items-end gap-x-4 gap-y-3">
+       {/* Drag Handle */}
         <div
           draggable
           onDragStart={() => onDragStart(course.id)}
@@ -54,7 +54,7 @@ export function CourseInput({
           }}
           className="flex-shrink-0 self-center text-gray-400 cursor-grab active:cursor-grabbing hover:text-gray-600"
         >
-          <GripVertical className="h-5 w-5" />
+          {/* <GripVertical className="h-5 w-5" />   */}
         </div>
 
         {/* Required Fields */}
