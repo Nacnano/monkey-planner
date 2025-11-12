@@ -27,7 +27,7 @@ export function ScenariosTable({
       <div className="mb-4">
         <h3 className="flex items-center text-xl font-bold text-gray-800">
           <CalendarDays className="h-6 w-6 mr-3 text-indigo-500 no-print" />
-          รายละเอียดจำนวน Slot และค่าเรียน / เดือน
+          ตารางจำนวน Slot และค่าเรียน / เดือน
         </h3>
       </div>
       <div className="overflow-x-auto">
@@ -116,29 +116,33 @@ export function ScenariosTable({
                   );
                 })}
                 <td className="px-6 py-4">
-                  {s.isSuccess ? (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                      <svg
-                        className="-ml-0.5 mr-1.5 h-2 w-2 text-green-400"
-                        fill="currentColor"
-                        viewBox="0 0 8 8"
-                      >
-                        <circle cx="4" cy="4" r="3" />
-                      </svg>
-                      ใช่
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                      <svg
-                        className="-ml-0.5 mr-1.5 h-2 w-2 text-red-400"
-                        fill="currentColor"
-                        viewBox="0 0 8 8"
-                      >
-                        <circle cx="4" cy="4" r="3" />
-                      </svg>
-                      ไม่
-                    </span>
-                  )}
+                {examDeadlines.every((deadline) =>
+                  s.deadlineSuccess.some(
+                    (ds) => ds.deadlineId === deadline.id && ds.isSuccess
+                  )
+                ) ? (
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    <svg
+                      className="-ml-0.5 mr-1.5 h-2 w-2 text-green-400"
+                      fill="currentColor"
+                      viewBox="0 0 8 8"
+                    >
+                      <circle cx="4" cy="4" r="3" />
+                    </svg>
+                    ใช่
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                    <svg
+                      className="-ml-0.5 mr-1.5 h-2 w-2 text-red-400"
+                      fill="currentColor"
+                      viewBox="0 0 8 8"
+                    >
+                      <circle cx="4" cy="4" r="3" />
+                    </svg>
+                    ไม่
+                  </span>
+                )}
                 </td>
                 <td className="px-6 py-4">
                   {isFinite(s.monthsToFinish)
