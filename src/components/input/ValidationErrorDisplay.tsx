@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { AlertCircle } from "lucide-react";
 
 interface ValidationErrorDisplayProps {
@@ -8,6 +8,27 @@ interface ValidationErrorDisplayProps {
 export function ValidationErrorDisplay({
   errors,
 }: ValidationErrorDisplayProps) {
+  const [hasInput, setHasInput] = useState(false);
+
+  useEffect(() => {
+    // Get all input and textarea elements
+    const inputFields = document.querySelectorAll("input, textarea");
+
+    // Check if any input field is filled
+    const hasFilledInput = Array.from(inputFields).some((input) => {
+      // Type assertion: input is guaranteed to be HTMLInputElement or HTMLTextAreaElement
+      const el = input as HTMLInputElement | HTMLTextAreaElement;
+      return el.value.trim() !== "";
+    });
+
+    setHasInput(hasFilledInput);
+  }, []);
+
+  // Only display the error message if there are errors and input has been provided
+  if (errors.length === 0 || !hasInput) {
+    return null;
+  }
+
   return (
     <div className="!mt-8 p-4 bg-red-50 border border-red-200 rounded-lg">
       <div className="flex">
