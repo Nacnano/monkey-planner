@@ -14,6 +14,34 @@ export function ScenariosTable({
 }: ScenariosTableProps) {
   const { timelineScenarios, examDeadlines } = results;
 
+  // Get latest deadline (max daysRemaining)
+  const maxDeadlineDays = Math.max(
+    0,
+    ...examDeadlines.map((d) => d.daysRemaining)
+  );
+
+  // Helper to render small +/- diff badge
+  const renderDiffBadge = (diff: number) => {
+    const isPositive = diff >= 0;
+    const cls = isPositive
+      ? "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 ml-2"
+      : "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 ml-2";
+    const sign = diff > 0 ? "+" : diff < 0 ? "-" : "+";
+    return (
+      <span className={cls}>
+        <svg
+          className={`-ml-0.5 mr-1 h-2 w-2 ${isPositive ? "text-green-400" : "text-red-400"}`}
+          fill="currentColor"
+          viewBox="0 0 8 8"
+        >
+          <circle cx="4" cy="4" r="3" />
+        </svg>
+        {sign}
+        {formatNumber(Math.abs(diff), 0)}
+      </span>
+    );
+  };
+
   const getRowClass = (scenario: TimelineAnalysis, index: number): string => {
     const isRecommended = scenario.slotsPerWeek === recommendedSlots;
     if (isRecommended) {
@@ -116,33 +144,36 @@ export function ScenariosTable({
                   );
                 })}
                 <td className="px-6 py-4">
-                {examDeadlines.every((deadline) =>
-                  s.deadlineSuccess.some(
-                    (ds) => ds.deadlineId === deadline.id && ds.isSuccess
-                  )
-                ) ? (
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    <svg
-                      className="-ml-0.5 mr-1.5 h-2 w-2 text-green-400"
-                      fill="currentColor"
-                      viewBox="0 0 8 8"
-                    >
-                      <circle cx="4" cy="4" r="3" />
-                    </svg>
-                    ใช่
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                    <svg
-                      className="-ml-0.5 mr-1.5 h-2 w-2 text-red-400"
-                      fill="currentColor"
-                      viewBox="0 0 8 8"
-                    >
-                      <circle cx="4" cy="4" r="3" />
-                    </svg>
-                    ไม่
-                  </span>
-                )}
+                <div className="flex items-center whitespace-nowrap">
+                  {examDeadlines.every((deadline) =>
+                    s.deadlineSuccess.some(
+                      (ds) => ds.deadlineId === deadline.id && ds.isSuccess
+                    )
+                  ) ? (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      <svg
+                        className="-ml-0.5 mr-1.5 h-2 w-2 text-green-400"
+                        fill="currentColor"
+                        viewBox="0 0 8 8"
+                      >
+                        <circle cx="4" cy="4" r="3" />
+                      </svg>
+                      ใช่
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                      <svg
+                        className="-ml-0.5 mr-1.5 h-2 w-2 text-red-400"
+                        fill="currentColor"
+                        viewBox="0 0 8 8"
+                      >
+                        <circle cx="4" cy="4" r="3" />
+                      </svg>
+                      ไม่
+                    </span>
+                  )}
+                  {renderDiffBadge(Math.round(maxDeadlineDays - s.daysToFinish))}
+                </div>
                 </td>
                 <td className="px-6 py-4">
                   {isFinite(s.monthsToFinish)

@@ -6,7 +6,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
   ReferenceLine,
 } from "recharts";
@@ -31,34 +30,124 @@ const COURSE_COLORS = [
 
 interface CustomTooltipProps {
   active?: boolean;
-  payload?: Array<{ name: string; value: number; color: string }>;
+  payload?: Array<{ name: string; value: number; color?: string }>;
   label?: string | number;
+  examDeadlines?: Array<{ id: string; examName: string; date: string; daysRemaining: number }>;
+  courses?: Array<{ id: string; name: string }>;
+  maxDeadlineDays?: number;
 }
 
-const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+  examDeadlines = [],
+  courses = [],
+  maxDeadlineDays = 0,
+}: CustomTooltipProps) => {
   if (active && payload && payload.length) {
-    const total = payload.reduce((sum, entry) => sum + (entry.value || 0), 0);
+    // map of course name -> value (days for that course in this scenario)
+    const valuesMap = new Map<string, number>();
+    payload.forEach((entry) => {
+      valuesMap.set(entry.name, Number(entry.value || 0));
+    });
+
+    // helper to render green/red badge like Scenario table
+    const renderDiffBadge = (diff: number) => {
+      const isPositive = diff >= 0;
+      const cls = isPositive
+        ? "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+        : "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800";
+      // show "+" for positive (and zero), "-" for negative
+      const sign = diff > 0 ? "+" : diff < 0 ? "-" : "+";
+      return (
+        <span className={cls} style={{ marginLeft: 8 }}>
+          <svg
+            className={`-ml-0.5 mr-1.5 h-2 w-2 ${isPositive ? "text-green-400" : "text-red-400"}`}
+            fill="currentColor"
+            viewBox="0 0 8 8"
+          >
+            <circle cx="4" cy="4" r="3" />
+          </svg>
+          {sign}
+          {formatNumber(Math.abs(diff), 0)}
+        </span>
+      );
+    };
+
+    // compute total (sum of payload values)
+    const total = payload.reduce((sum, entry) => sum + (Number(entry.value || 0)), 0);
+
+    // Precompute an index map for course order to compute cumulative sums
+    const courseIndexByName = new Map<string, number>();
+    courses.forEach((c, idx) => courseIndexByName.set(c.name, idx));
+
+    // For each payload entry show cumulative days up to that course (based on course order)
+    // If course isn't found in courses array, treat it as standalone value
     return (
-      <div className="p-3 bg-white border border-gray-200 rounded-lg shadow-xl text-sm">
+      <div className="p-4 bg-white border border-gray-200 rounded-lg shadow-xl text-sm min-w-[340px]">
         <p className="font-bold text-gray-800 mb-2">{`Slot / สัปดาห์: ${label}`}</p>
-        <ul className="list-none p-0 space-y-1">
-          {payload.map((entry, index) => (
-            <li
-              key={`item-${index}`}
-              style={{ color: entry.color }}
-              className="flex justify-between items-center"
-            >
-              <span className="font-medium">{entry.name}:</span>
-              <span className="font-bold ml-4">
-                {formatNumber(entry.value || 0, 1)} วัน
-              </span>
-            </li>
-          ))}
+        <ul className="list-none p-0 space-y-2">
+          {payload.map((entry, index) => {
+            const courseName = entry.name;
+            const courseValue = Number(entry.value || 0);
+
+            const idx = courseIndexByName.has(courseName)
+              ? (courseIndexByName.get(courseName) as number)
+              : -1;
+
+            // compute cumulative sum for this course (sum of values for courses with index <= idx)
+            let cumulative = 0;
+            if (idx >= 0) {
+              // iterate courses in order and sum from valuesMap if present
+              for (let i = 0; i <= idx; i += 1) {
+                const c = courses[i];
+                if (!c) continue;
+                cumulative += Number(valuesMap.get(c.name) || 0);
+              }
+            } else {
+              // course not in course list — treat as its own value
+              cumulative = courseValue;
+            }
+
+            // find matching deadline by course id (deadline.id is used as course id in chart code)
+            const courseObj = courses.find((c) => c.name === courseName);
+            const deadline = examDeadlines.find((d) => d.id === (courseObj ? courseObj.id : undefined));
+            const deadlineDays = deadline ? deadline.daysRemaining : null;
+            const diff = deadlineDays !== null ? deadlineDays - cumulative : NaN;
+
+            return (
+              <li
+                key={`item-${index}`}
+                style={{ color: entry.color, gridTemplateColumns: "1fr auto", display: "grid", gap: "0.5rem", alignItems: "center" } as React.CSSProperties}
+                className="items-center"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="font-medium">{courseName}:</span>
+                </div>
+                <div className="flex items-center gap-3 justify-end">
+                  <span className="text-gray-700">{formatNumber(courseValue, 0)} วัน</span>
+                  <span className="text-xs text-gray-500">({formatDaysToDate(cumulative)})</span>
+                  <div className="flex-shrink-0">
+                    {Number.isFinite(diff) ? renderDiffBadge(diff) : (
+                      <span className="text-xs text-gray-400">N/A</span>
+                    )}
+                  </div>
+                </div>
+              </li>
+            );
+          })}
         </ul>
-        <p className="font-extrabold text-gray-900 border-t border-gray-200 mt-2 pt-2 flex justify-between">
-          <span>รวม:</span>
-          <span>{formatNumber(total, 1)} วัน</span>
-        </p>
+        <div className="font-extrabold text-gray-900 border-t border-gray-200 mt-3 pt-2"
+          style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "0.5rem", alignItems: "center" }}
+        >
+          <div>รวม:</div>
+          <div className="flex items-center gap-3 justify-end">
+            <span>{formatNumber(total, 0)} วัน</span>
+            <span className="text-xs text-gray-500">({formatDaysToDate(total)})</span>
+            {renderDiffBadge(Math.round((maxDeadlineDays || 0) - total))}
+          </div>
+        </div>
       </div>
     );
   }
@@ -299,8 +388,14 @@ export function TimelineChart({ results }: TimelineChartProps) {
               ticks={[1, 2, 3, 4, 5, 6, 7]}
             />
             <Tooltip
-              content={<CustomTooltip />}
-              cursor={{ fill: "rgba(241, 245, 249, 0.7)" }}
+              content={
+                <CustomTooltip
+                  examDeadlines={examDeadlines}
+                  courses={courses}
+                  maxDeadlineDays={maxDeadlineDays}
+                />
+              }
+               cursor={{ fill: "rgba(241, 245, 249, 0.7)" }}
             />
             {/* <Legend
               content={<CustomLegend payload={legendPayload} />}
